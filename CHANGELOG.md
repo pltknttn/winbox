@@ -1,3 +1,7 @@
+## v0.2.83
+
+-  update dependencies
+
 ## v0.2.7
 
 - support option "overflow" to allow the window moving outside the viewports border

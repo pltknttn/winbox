@@ -124,6 +124,7 @@ pre{
     user-select: text !important;
 }
 pre code.hljs{
+    display: inline-block;
     background: #181f2a;
     padding: 1em 1.5em;
     border-radius: 10px;

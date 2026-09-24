@@ -3,6 +3,7 @@ node_modules
 /log
 /tmp
 .idea
+.vscode
 .nyc_output
 .db
 coverage
@@ -13,3 +14,5 @@ package-lock.json
 misc
 vorlage
 test
+.playwright*
+.*_mcp

@@ -396,13 +396,13 @@ function setup(){
         // }
     });
 
-    addListener(body, "mousedown", function(event){
+    addListener(body, "mousedown", function(_){
 
         window_clicked = false;
 
     }, true);
 
-    addListener(body, "mousedown", function(event){
+    addListener(body, "mousedown", function(_){
 
         if(!window_clicked){
 
@@ -474,13 +474,13 @@ function register(self){
         self.close() || (self = null);
     });
 
-    addListener(self.dom, "mousedown", function(event){
+    addListener(self.dom, "mousedown", function(_){
 
         window_clicked = true;
 
     }, true);
 
-    addListener(self.body, "mousedown", function(event){
+    addListener(self.body, "mousedown", function(_){
 
         // stop propagation would disable global listeners used inside window contents
         // use event bubbling for this listener to skip this handler by the other click listeners
@@ -505,22 +505,22 @@ function remove_min_stack(self){
 function update_min_stack(){
 
     const length = stack_min.length;
-    const splitscreen_index = {};
-    const splitscreen_length = {};
+    const split_screen_index = {};
+    const split_screen_length = {};
 
     for(let i = 0, self, key; i < length; i++){
 
         self = stack_min[i];
         key = self.left + ":" + self.top;
 
-        if(splitscreen_length[key]){
+        if(split_screen_length[key]){
 
-            splitscreen_length[key]++;
+            split_screen_length[key]++;
         }
         else{
 
-            splitscreen_index[key] = 0;
-            splitscreen_length[key] = 1;
+            split_screen_index[key] = 0;
+            split_screen_length[key] = 1;
         }
     }
 
@@ -528,10 +528,10 @@ function update_min_stack(){
 
         self = stack_min[i]
         key = self.left + ":" + self.top;
-        width = Math.min((root_w - self.left - self.right) / splitscreen_length[key], 250);
+        width = Math.min((root_w - self.left - self.right) / split_screen_length[key], 250);
         self.resize((width + 1) | 0, self.header, true)
-            .move((self.left + splitscreen_index[key] * width) | 0, root_h - self.bottom - self.header, true);
-        splitscreen_index[key]++;
+            .move((self.left + split_screen_index[key] * width) | 0, root_h - self.bottom - self.header, true);
+        split_screen_index[key]++;
     }
 }
 
@@ -725,7 +725,13 @@ function addWindowListener(self, dir){
                 ) + offsetX;
             }
 
-            self.x = Math.max(Math.min(self.x, self.overflow ? root_w - 30 : root_w - self.width - self.right), self.overflow ? 30 - self.width : self.left);
+            self.x = Math.max(Math.min(self.x, 
+                self.overflow 
+                    ? root_w - 30 
+                    : root_w - self.width - self.right), 
+                self.overflow 
+                    ? 30 - self.width
+                    : self.left);
             move_x = self.x !== old_x;
         }
 
@@ -736,7 +742,11 @@ function addWindowListener(self, dir){
                 self.y = self.top + offsetY;
             }
 
-            self.y = Math.max(Math.min(self.y, self.overflow ? root_h - self.header : root_h - self.height - self.bottom), self.top);
+            self.y = Math.max(Math.min(self.y,
+                self.overflow 
+                    ? root_h - self.header 
+                    : root_h - self.height - self.bottom), 
+                self.top);
             move_y = self.y !== old_y;
         }
 
