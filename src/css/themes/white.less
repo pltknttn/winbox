@@ -1,13 +1,27 @@
+// WinBox Theme: "white"
+//
+// Clean, flat, light theme: white header with dark text and inverted controls.
+// All colors are exposed as CSS custom properties (see theme-base.less), so
+// they can be overridden dynamically at runtime, e.g.:
+//
+//     wb.dom.style.setProperty("--wb-title-color", "#0078d4");
+
+@import "theme-base.less";
+
 .winbox.white {
-  & {
-    background: #fff;
-  }
+    .wb-theme();
 
-  .wb-title {
-    color: #000;
-  }
-
-  .wb-control {
-    filter: invert(1);
-  }
+    // ---- palette ----
+    --wb-header-bg:              #ffffff;
+    --wb-header-bg-unfocused:    var(--wb-header-bg);   // white does not dim
+    --wb-header-color:           #000000;
+    --wb-title-color:            #000000;               // title readable on white header
+    --wb-body-bg:                #ffffff;
+    --wb-body-color:             #222222;               // dark body text on white
+    --wb-control-opacity:        1;
+    --wb-control-filter:         invert(1);            // dark icons on a light header
+    --wb-border-radius:          0;                     // square, no popup animation
+    --wb-animation:              none;
+    --wb-scrollbar-thumb:        #c1c9cb;
+    --wb-scrollbar-thumb-inactive: #a19f9d;
 }

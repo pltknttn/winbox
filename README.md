@@ -714,6 +714,49 @@ winbox.addClass("modern");
 
 You can change themes during the lifetime of the window.
 
+##### Available themes
+
+Besides `modern` and `white`, the following themes are shipped. Their palettes
+are derived from the [Radzen](https://github.com/radzenhq/radzen-blazor) themes
+and apply a flat (non-gradient) header in the theme's primary color with a title
+that is always readable on that background. `modern` and `white` share the same
+variable-based theme system, so every theme can be overridden dynamically:
+
+- `fluent` &mdash; Microsoft Fluent UI inspired, flat blue header (`#0078d4`), light body
+- `material` &mdash; Material Design inspired, flat indigo header (`#4340d2`), light body
+- `dark` &mdash; dark variant with a flat orange header (`#ff6d41`) and dark body
+- `default` &mdash; flat orange header (`#ff6d41`), light body
+
+```html
+<head>
+    <link rel="stylesheet" href="dist/css/winbox.min.css">
+    <link rel="stylesheet" href="dist/css/themes/material.min.css">
+    <script src="dist/js/winbox.min.js"></script>
+</head>
+```
+
+```js
+var winbox = new WinBox("Theme: Material", { class: "material" });
+```
+
+##### Dynamically override theme variables
+
+Each theme exposes its colors as CSS custom properties (prefixed with `--wb-`),
+e.g. `--wb-header-bg`, `--wb-header-color`, `--wb-body-bg`, `--wb-body-color`,
+`--wb-title-color`, `--wb-scrollbar-thumb` and `--wb-control-opacity`. Override
+them per window at runtime:
+
+```js
+var winbox = new WinBox("Theme: Material", { class: "material" });
+
+// override the body background of just this window
+winbox.dom.style.setProperty("--wb-body-bg", "#e3f2fd");
+// override the header background of just this window
+winbox.dom.style.setProperty("--wb-header-bg", "#2196f3");
+// override the title color of just this window
+winbox.dom.style.setProperty("--wb-title-color", "#ffeb3b");
+```
+
 ## Manage Window Content
 
 #### Set innerHTML

@@ -1,0 +1,153 @@
+// =============================================================================
+// Shared WinBox theme foundation
+// -----------------------------------------------------------------------------
+//
+// Every theme (modern, white, fluent, material, dark, default) is built on this
+// shared foundation. The overridable appearance is exposed as CSS custom
+// properties (prefixed with `--wb-*`), so it can be re-defined dynamically at
+// runtime on a single window (or on `root`), e.g.:
+//
+//     wb.dom.style.setProperty("--wb-body-bg", "#e3f2fd");
+//     wb.dom.style.setProperty("--wb-header-bg", "#2196f3");
+//
+// A theme is a one-rule block: set its palette, then call the `.wb-theme()`
+// mixin which consumes the variables:
+//
+//     .winbox.material {
+//         --wb-header-bg: #4340d2;
+//         --wb-body-bg:   #f5f5f5;
+//         .wb-theme();          // emits all the geometry / chrome rules
+//     }
+//
+// The defaults below live on `.winbox` (lower specificity, 0,1,0) and are
+// overridden by any `.winbox.<theme>` (0,2,0) that sets the same property.
+// Theme palettes are based on the Radzen Blazor themes:
+//   * material  -> Radzen material.scss
+//   * default   -> Radzen default.scss
+//   * dark      -> Radzen dark.scss
+//   * fluent    -> Radzen fluent-base.css
+// =============================================================================
+
+// Fallback values – used when a theme does not override a given property.
+.winbox {
+    --wb-header-bg:                #0050ff;
+    --wb-header-bg-unfocused:      #666;
+    --wb-header-color:             #ffffff;
+    --wb-header-border:            none;
+    --wb-header-height:            35px;
+
+    --wb-title-color:              #ffffff;              // adapted to the header background
+    --wb-title-font-size:          13px;
+    --wb-title-font-weight:        600;
+    --wb-title-text-transform:     uppercase;
+
+    --wb-body-bg:                  #ffffff;
+    --wb-body-color:               #000000;              // adapted to the body background
+    --wb-body-margin:              4px;
+
+    --wb-border-radius:            12px 12px 0 0;
+    --wb-box-shadow:               0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    --wb-animation:                popup 0.3s cubic-bezier(0.3, 1, 0.3, 1) forwards;
+
+    --wb-control-opacity:          0.65;
+    --wb-control-hover-opacity:    1;
+    --wb-control-filter:           none;
+
+    --wb-scrollbar-thumb:          #888;
+    --wb-scrollbar-thumb-inactive: #777;
+    --wb-scrollbar-size:           12px;
+}
+
+// Pop-up animation (reused by themes that opt into it via --wb-animation).
+@keyframes popup {
+    0%   { transform: scale(0.8); }
+    100% { transform: scale(1);  }
+}
+
+// Shared WinBox theme ruleset – consumes the `--wb-*` custom properties above.
+// Call it from inside `.winbox.<theme>` (it inherits/overrides the `.winbox`
+// defaults via the cascade).
+.wb-theme() {
+
+    // ---- geometry (uses the variables declared by the calling theme) ----
+    background: var(--wb-header-bg);
+    border-radius: var(--wb-border-radius);
+    box-shadow: var(--wb-box-shadow);
+    animation: var(--wb-animation);
+
+    // dimmed header while the window is not focused (and not minimized)
+    &:not(.min, .focus) {
+        background: var(--wb-header-bg-unfocused);
+    }
+
+    // hover fix for mobile devices which keeps the :hover state when touched
+    @media (hover: hover) {
+        &.min:not(:hover) {
+            background: var(--wb-header-bg-unfocused);
+        }
+
+        .wb-control * {
+            opacity: var(--wb-control-opacity);
+        }
+
+        .wb-control *:hover {
+            opacity: var(--wb-control-hover-opacity);
+        }
+    }
+
+    @media (hover: none) {
+        &.min {
+            background: var(--wb-header-bg-unfocused);
+        }
+    }
+
+    &.max {
+        border-radius: 0;
+    }
+
+    .wb-header {
+        height: var(--wb-header-height);
+        color: var(--wb-header-color);
+        border-bottom: var(--wb-header-border);
+    }
+
+    .wb-title {
+        color: var(--wb-title-color);
+        font-size: var(--wb-title-font-size);
+        font-weight: var(--wb-title-font-weight);
+        text-transform: var(--wb-title-text-transform);
+    }
+
+    .wb-control {
+        filter: var(--wb-control-filter);
+    }
+
+    .wb-body {
+        // width of window border:
+        margin: var(--wb-body-margin);
+        color: var(--wb-body-color);
+        background: var(--wb-body-bg);
+
+        &::-webkit-scrollbar {
+            width: var(--wb-scrollbar-size);
+            height: var(--wb-scrollbar-size);
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: var(--wb-scrollbar-thumb);
+        }
+
+        &::-webkit-scrollbar-thumb:window-inactive {
+            background: var(--wb-scrollbar-thumb-inactive);
+        }
+
+        &::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+    }
+}

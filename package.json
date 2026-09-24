@@ -37,10 +37,14 @@
     "build:css:bundle": "node task/bundle --image && lessc tmp/bundle.less dist/css/winbox.min.css && csso dist/css/winbox.min.css --output dist/css/winbox.min.css",
     "build:css:theme-modern": "lessc src/css/themes/modern.less dist/css/themes/modern.min.css && csso dist/css/themes/modern.min.css --output dist/css/themes/modern.min.css",
     "build:css:theme-white": "lessc src/css/themes/white.less dist/css/themes/white.min.css && csso dist/css/themes/white.min.css --output dist/css/themes/white.min.css",
+    "build:css:theme-fluent": "lessc src/css/themes/fluent.less dist/css/themes/fluent.min.css && csso dist/css/themes/fluent.min.css --output dist/css/themes/fluent.min.css",
+    "build:css:theme-material": "lessc src/css/themes/material.less dist/css/themes/material.min.css && csso dist/css/themes/material.min.css --output dist/css/themes/material.min.css",
+    "build:css:theme-dark": "lessc src/css/themes/dark.less dist/css/themes/dark.min.css && csso dist/css/themes/dark.min.css --output dist/css/themes/dark.min.css",
+    "build:css:theme-default": "lessc src/css/themes/default.less dist/css/themes/default.min.css && csso dist/css/themes/default.min.css --output dist/css/themes/default.min.css",
     "build:js": "node task/build",
     "build:bundle": "node task/build --bundle",
     "build:svg": "node task/svgo",
-    "build": "npm run clean && npm run copy && npm run build:svg && npm run build:css && npm run build:css:bundle && npm run build:css:theme-modern && npm run build:css:theme-white && node task/bundle --style && npm run build:js && npm run build:bundle && echo Build Complete. && exit 0",
+    "build": "npm run clean && npm run copy && npm run build:svg && npm run build:css && npm run build:css:bundle && npm run build:css:theme-modern && npm run build:css:theme-white && npm run build:css:theme-fluent && npm run build:css:theme-material && npm run build:css:theme-dark && npm run build:css:theme-default && node task/bundle --style && npm run build:js && npm run build:bundle && echo Build Complete. && exit 0",
     "server": "node task/server.js"
   },
   "files": [

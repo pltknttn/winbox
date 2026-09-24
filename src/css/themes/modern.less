@@ -1,86 +1,25 @@
+// WinBox Theme: "modern"
+//
+// Original modern theme: gradient header, dark body, popup animation and a
+// dimmed header while the window is not focused.
+// All colors are exposed as CSS custom properties (see theme-base.less), so
+// they can be overridden dynamically at runtime, e.g.:
+//
+//     wb.dom.style.setProperty("--wb-body-bg", "#000");
+
+@import "theme-base.less";
+
 .winbox.modern {
-  & {
-    background: linear-gradient(90deg, #ff00f0, #0050ff);
-    border-radius: 12px 12px 0 0;
-    animation: popup 0.3s cubic-bezier(0.3, 1, 0.3, 1) forwards;
-  }
+    .wb-theme();
 
-  //&.min:not(:hover),
-  &:not(.min,.focus) {
-    background: #666;
-  }
-
-  // hover fix for mobile devices which keeps the :hover state when touched
-
-  @media (hover: hover) {
-    &.min:not(:hover) {
-      background: #666;
-    }
-
-    .wb-control * {
-      opacity: 0.65;
-    }
-
-    .wb-control *:hover {
-      opacity: 1;
-    }
-  }
-
-  @media (hover: none) {
-    &.min {
-      background: #666;
-    }
-  }
-
-  //&.min,
-  &.max {
-    border-radius: 0;
-  }
-
-  .wb-title {
-    font-size: 13px;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  .wb-body {
-
-    & {
-      /* width of window border: */
-      margin: 4px;
-      color: #fff;
-      background: #131820;
-    }
-
-    &::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      background: #263040;
-    }
-
-    &::-webkit-scrollbar-thumb:window-inactive {
-      background: #181f2a;
-    }
-
-    &::-webkit-scrollbar-corner {
-      background: transparent;
-    }
-  }
-}
-
-@keyframes popup {
-  0% {
-    transform: scale(0.8);
-  }
-  100% {
-    transform: scale(1);
-  }
+    // ---- palette (Radzen-ish, original modern look) ----
+    --wb-header-bg:              linear-gradient(90deg, #ff00f0, #0050ff);
+    --wb-header-bg-unfocused:    #666;
+    --wb-header-color:           #ffffff;
+    --wb-title-color:            #ffffff;
+    --wb-body-bg:                #131820;
+    --wb-body-color:             #ffffff;
+    --wb-scrollbar-thumb:        #263040;
+    --wb-scrollbar-thumb-inactive: #181f2a;
+    --wb-border-radius:          12px 12px 0 0;
 }

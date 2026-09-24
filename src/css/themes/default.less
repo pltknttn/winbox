@@ -1,0 +1,29 @@
+// WinBox Theme: "default"
+//
+// Based on the Radzen default.scss palette:
+//   primary  #ff6d41, secondary #35a0d7
+//   base-100 #f6f7fa, base-700 #545e61, base-900 #28363c
+//   base-400 #c1c9cb, base-500 #95a4a8
+//
+// Header is a flat primary color (Radzen style) with white (on-primary) title,
+// so the title always stays readable on the header background.
+// All colors are CSS custom properties — see theme-base.less.
+
+@import "theme-base.less";
+
+.winbox.default {
+    .wb-theme();
+
+    // ---- palette (from Radzen default.scss) ----
+    --wb-header-bg:              #ff6d41;              // primary
+    --wb-header-bg-unfocused:    var(--wb-header-bg);  // no dim — authentic, static look
+    --wb-header-color:           #ffffff;
+    --wb-title-color:            #ffffff;               // white on the colored header
+    --wb-body-bg:                #f6f7fa;               // base-100
+    --wb-body-color:             #545e61;               // base-700 (dark text on light)
+    --wb-scrollbar-thumb:        #c1c9cb;               // base-400
+    --wb-scrollbar-thumb-inactive: #95a4a8;             // base-500
+    --wb-border-radius:          8px 8px 0 0;
+    --wb-animation:              none;
+    --wb-box-shadow:             0 4px 12px rgba(0, 0, 0, 0.12);
+}

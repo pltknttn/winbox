@@ -1,0 +1,29 @@
+// WinBox Theme: "fluent"
+//
+// Based on the Radzen fluent-base.css palette:
+//   primary  #0078d4, primary-dark #005a9e, secondary #8a8886
+//   base-50  #faf9f8, base-800 #323130, base-900 #201f1e
+//   base-500 #8a8886, base-600 #605e5c
+//
+// Header is a flat primary color (Radzen style) with white (on-primary) title,
+// so the title always stays readable on the header background.
+// All colors are CSS custom properties — see theme-base.less.
+
+@import "theme-base.less";
+
+.winbox.fluent {
+    .wb-theme();
+
+    // ---- palette (from Radzen fluent-base.css) ----
+    --wb-header-bg:              #0078d4;              // primary
+    --wb-header-bg-unfocused:    var(--wb-header-bg);  // no dim — authentic, static look
+    --wb-header-color:           #ffffff;
+    --wb-title-color:            #ffffff;               // white on the colored header
+    --wb-body-bg:                #faf9f8;               // base-50
+    --wb-body-color:             #323130;               // base-800 (dark text on light)
+    --wb-scrollbar-thumb:        #8a8886;               // base-500
+    --wb-scrollbar-thumb-inactive: #605e5c;             // base-600
+    --wb-border-radius:          8px 8px 0 0;
+    --wb-animation:              none;
+    --wb-box-shadow:             0 4px 12px rgba(0, 0, 0, 0.12);
+}

@@ -23,7 +23,7 @@ function build() {
             // Remove import statements
             code = code
                 .replace(/import\s+template\s+from\s+["'][^"']+["'];?\s*/g, '')
-                .replace(/import\s+\{[^}]*\\}\s+from\s+["'][^"']+["'];?\s*/g, '')
+                .replace(/import\s+\{[^}]*\}\s+from\s+["'][^"']+["'];?\s*/g, '')
                 .replace(/import\s+\w+\s+from\s+["'][^"']+["'];?\s*/g, '');
             
             // Convert the default-exported template function into a named function

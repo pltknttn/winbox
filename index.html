@@ -16,12 +16,21 @@
     <!-- Optional standard themes: -->
     <link rel="stylesheet" href="dist/css/themes/modern.min.css">
     <link rel="stylesheet" href="dist/css/themes/white.min.css">
+    <!-- Additional themes (based on the Radzen palette): -->
+    <link rel="stylesheet" href="dist/css/themes/fluent.min.css">
+    <link rel="stylesheet" href="dist/css/themes/material.min.css">
+    <link rel="stylesheet" href="dist/css/themes/dark.min.css">
+    <link rel="stylesheet" href="dist/css/themes/default.min.css">
 
     <!-- Development only: -->
     <!--
     <link type="text/css" rel="stylesheet/less" href="src/css/winbox.less">
     <link type="text/css" rel="stylesheet/less" href="src/css/themes/modern.less">
     <link type="text/css" rel="stylesheet/less" href="src/css/themes/white.less">
+    <link type="text/css" rel="stylesheet/less" href="src/css/themes/fluent.less">
+    <link type="text/css" rel="stylesheet/less" href="src/css/themes/material.less">
+    <link type="text/css" rel="stylesheet/less" href="src/css/themes/dark.less">
+    <link type="text/css" rel="stylesheet/less" href="src/css/themes/default.less">
     <script src="node_modules/less/dist/less.min.js"></script>
     -->
 
@@ -645,6 +654,44 @@ new WinBox("Splitscreen (Right)", {
 
         <hr>
         <br>
+        Theme Selector
+        <br><br>
+        <div style="color: #79c0ff; line-height: 22px;">
+            Pick one of the additional themes below and open a window with it.<br>
+            Same mechanism as the "modern" theme example above &mdash; the theme stylesheet
+            is loaded once and the selected theme is applied via the <code>class</code> option.
+        </div>
+        <br>
+        <style>
+            #theme-selector label {
+                color: #fff;
+                cursor: pointer;
+                margin-right: 12px;
+            }
+            #theme-selector input[name="wb-theme"] {
+                accent-color: #0078d4;
+                cursor: pointer;
+            }
+        </style>
+        <div id="theme-selector">
+            <label><input type="radio" name="wb-theme" value="fluent" checked> fluent</label>
+            <label><input type="radio" name="wb-theme" value="material"> material</label>
+            <label><input type="radio" name="wb-theme" value="dark"> dark</label>
+            <label><input type="radio" name="wb-theme" value="default"> default</label>
+            <label><input type="radio" name="wb-theme" value="white"> white</label>
+        </div>
+        <br>
+        <pre><code class="language-js">new WinBox("Theme: " + theme, {
+    class: theme,
+    mount: document.getElementById("content")
+                   .cloneNode(true)
+});</code></pre>
+        <div class="break"></div>
+        <div class="button" onclick="window.examples['theme-selector']()" style="background-color: #0078d4">Show Example</div>
+        <br><br>
+
+        <hr>
+        <br>
         Custom Controls
         <br><br>
         <pre><code class="language-css">.wb-like {
@@ -998,6 +1045,21 @@ new WinBox("Custom Template", { template });</code></pre>
                 new WinBox("Theme: Modern", {
 
                     class: "modern",
+                    mount: document.getElementById("content")
+                                   .cloneNode(true)
+                });
+            },
+            "theme-selector": function(){
+
+                // read the theme the user picked (fluent / material / dark / default)
+                var input = document.querySelector("input[name='wb-theme']:checked");
+                var theme = input ? input.value : "fluent";
+
+                new WinBox("Theme: " + theme.charAt(0).toUpperCase() + theme.slice(1), {
+
+                    // same mechanism as the "modern" theme: the matching
+                    // stylesheet is loaded once and the theme is applied via class
+                    class: theme,
                     mount: document.getElementById("content")
                                    .cloneNode(true)
                 });
