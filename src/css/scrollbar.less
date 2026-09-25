@@ -1,0 +1,72 @@
+// =============================================================================
+// Optional scrollbar styling for `.wb-body`
+// -----------------------------------------------------------------------------
+//
+// Scrollbar styling is OPT-IN and fully variable-driven. All colors/sizes are
+// read from the `--wb-scrollbar-*` custom properties declared on `.winbox`
+// (see theme-base.less) and overridable per window at runtime, e.g.:
+//
+//     wb.dom.classList.add("wb-scrollbar");        // enable styled scrollbar
+//     wb.dom.style.setProperty("--wb-scrollbar-thumb", "#555");
+//
+// The `.wb-scrollbar-style()` mixin below is consumed by:
+//   * `.wb-theme()`           -> themed windows enable it automatically, and
+//   * `.winbox.wb-scrollbar`  (defined in winbox.less) -> opt-in for non-themed
+//     windows.
+//
+// Hiding the bar while keeping the body scrollable is handled separately by the
+// `.no-scrollbar` / `.no-scrollbar-y` / `.no-scrollbar-x` control classes in
+// control.less (these use `display:none` / `scrollbar-width:none`, properties the
+// styled rules never set, so hiding always wins regardless of specificity).
+//
+// NOTE on per-axis hiding (Firefox):
+//   Firefox exposes `scrollbar-width` only per-element (not per axis), so
+//   `.no-scrollbar-y` / `.no-scrollbar-x` additionally set `scrollbar-width:
+//   none`, which hides BOTH bars on Firefox while scrolling stays enabled. On
+//   WebKit/Blink the `::-webkit-scrollbar:vertical/:horizontal` rules hide
+//   exactly one bar and leave the other untouched.
+// =============================================================================
+
+// Emits the complete, variable-driven scrollbar styling for `.wb-body`.
+// It is relative to the calling scope, so it produces themed rules
+// (`.winbox.<theme> .wb-body::-webkit-scrollbar` ...) when called from
+// `.wb-theme()` and non-themed opt-in rules
+// (`.winbox.wb-scrollbar .wb-body::-webkit-scrollbar` ...) when called from
+// winbox.less.
+.wb-scrollbar-style() {
+    .wb-body {
+        /* Firefox and other modern browsers */
+        scrollbar-width: var(--wb-scrollbar-width, thin);
+        scrollbar-color: var(--wb-scrollbar-color-thumb, var(--wb-scrollbar-thumb, #888))
+                         var(--wb-scrollbar-color-track, transparent);
+    }
+
+    /* Chrome, Edge, Safari and other WebKit/Blink browsers */
+    .wb-body::-webkit-scrollbar {
+        /* width = vertical (Y) scrollbar, height = horizontal (X) scrollbar */
+        width:  var(--wb-scrollbar-y, var(--wb-scrollbar-size, 12px));
+        height: var(--wb-scrollbar-x, var(--wb-scrollbar-size, 12px));
+    }
+
+    .wb-body::-webkit-scrollbar-track {
+        background: var(--wb-scrollbar-track-bg, var(--wb-scrollbar-color-track, transparent));
+    }
+
+    .wb-body::-webkit-scrollbar-thumb {
+        border-radius: var(--wb-scrollbar-thumb-radius, 10px);
+        border:        var(--wb-scrollbar-thumb-border, 2px solid transparent);
+        background:    var(--wb-scrollbar-thumb, #888);
+    }
+
+    .wb-body::-webkit-scrollbar-thumb:hover {
+        background: var(--wb-scrollbar-thumb-hover, var(--wb-scrollbar-thumb, #666));
+    }
+
+    .wb-body::-webkit-scrollbar-thumb:window-inactive {
+        background: var(--wb-scrollbar-thumb-inactive, #777);
+    }
+
+    .wb-body::-webkit-scrollbar-corner {
+        background: var(--wb-scrollbar-corner-bg, transparent);
+    }
+}

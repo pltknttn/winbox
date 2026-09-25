@@ -743,8 +743,9 @@ var winbox = new WinBox("Theme: Material", { class: "material" });
 
 Each theme exposes its colors as CSS custom properties (prefixed with `--wb-`),
 e.g. `--wb-header-bg`, `--wb-header-color`, `--wb-body-bg`, `--wb-body-color`,
-`--wb-title-color`, `--wb-scrollbar-thumb` and `--wb-control-opacity`. Override
-them per window at runtime:
+`--wb-title-color`, `--wb-control-opacity` and the `--wb-scrollbar-*` family
+(used to style — and, via the control classes below, hide — the scrollbar).
+Override them per window at runtime:
 
 ```js
 var winbox = new WinBox("Theme: Material", { class: "material" });
@@ -755,6 +756,10 @@ winbox.dom.style.setProperty("--wb-body-bg", "#e3f2fd");
 winbox.dom.style.setProperty("--wb-header-bg", "#2196f3");
 // override the title color of just this window
 winbox.dom.style.setProperty("--wb-title-color", "#ffeb3b");
+// style the scrollbar thumb of this themed window
+winbox.dom.style.setProperty("--wb-scrollbar-thumb", "#3367d6");
+// make the scrollbar thinner on this window (WebKit/Blink)
+winbox.dom.style.setProperty("--wb-scrollbar-y", "8px");
 ```
 
 ## Manage Window Content
@@ -1275,6 +1280,26 @@ WinBox provides you some built-in control classes you can pass when creating a w
         <td>no-move</td>
         <td>Disables the window moving capability</td>
     </tr>
+    <tr></tr>
+    <tr>
+        <td>wb-scrollbar</td>
+        <td>Enables the variable-driven custom scrollbar on <b>any</b> window (themed or non-themed). Styling is opt-in and is never applied automatically. See <a href="#style-scrollbars">Style Scrollbars</a>.</td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td>no-scrollbar</td>
+        <td>Hides the scrollbar but keeps the window body fully scrollable (both axes). Works alongside `wb-scrollbar` and any theme.</td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td>no-scrollbar-y</td>
+        <td>Hides only the vertical (Y) scrollbar, keeps the horizontal bar and scrolling</td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td>no-scrollbar-x</td>
+        <td>Hides only the horizontal (X) scrollbar, keeps the vertical bar and scrolling</td>
+    </tr>
 </table>
 
 > Without the header the user isn't able to move the window frame. It may be useful for creating fixed popups.
@@ -1617,26 +1642,78 @@ Customize the modal background overlay:
 }
 ```
 
+<a name="style-scrollbars" id="style-scrollbars"></a>
 #### Style Scrollbars
 
-```css
-.wb-body::-webkit-scrollbar {
-    width: 12px;
-}
-.wb-body::-webkit-scrollbar-track {
-    background: transparent;
-}
-.wb-body::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: #263040;
-}
-.wb-body::-webkit-scrollbar-thumb:window-inactive {
-    background: #181f2a;
-}
-.wb-body::-webkit-scrollbar-corner {
-    background: transparent;
-}
+Scrollbar styling is **opt-in** and fully driven by CSS custom properties.
+
+| Scope | How to enable |
+| --- | --- |
+| **Any window (themed or not)** | add the `wb-scrollbar` control class — a theme only exposes its `--wb-scrollbar-*` palette; styling is opt-in, never automatic |
+
+```js
+// non-themed window -> enable the variable-driven scrollbar
+// enable the variable-driven scrollbar on ANY window (themed or non-themed)
+const winbox = new WinBox("Scroll me", { class: "wb-scrollbar" });
+
+// a theme only exposes its palette -- add `wb-scrollbar` to render the styled bar
+const themed = new WinBox("Themed", { class: "material wb-scrollbar" });
 ```
+
+All colors and sizes come from the `--wb-scrollbar-*` custom properties declared
+on `.winbox`. Override them per window at runtime to customize (or animate) the
+look, e.g.:
+
+```js
+winbox.dom.style.setProperty("--wb-scrollbar-thumb", "#3367d6");
+winbox.dom.style.setProperty("--wb-scrollbar-thumb-hover", "#204a9d");
+winbox.dom.style.setProperty("--wb-scrollbar-y", "8px");
+```
+
+Available variables (declared in `src/css/themes/theme-base.less`, overridable on
+`.winbox.<theme>` or per window):
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `--wb-scrollbar-size` | `12px` | Base scrollbar thickness (fallback for both axes) |
+| `--wb-scrollbar-y` | `var(--wb-scrollbar-size)` | Vertical (Y) scrollbar thickness (`width`) |
+| `--wb-scrollbar-x` | `var(--wb-scrollbar-size)` | Horizontal (X) scrollbar thickness (`height`) |
+| `--wb-scrollbar-width` | `thin` | Firefox: `scrollbar-width` (`thin` = styled, `none` = hidden) |
+| `--wb-scrollbar-color-thumb` | `var(--wb-scrollbar-thumb)` | Firefox `scrollbar-color` thumb color |
+| `--wb-scrollbar-color-track` | `transparent` | Firefox `scrollbar-color` track color |
+| `--wb-scrollbar-thumb` | `#888` | WebKit thumb background |
+| `--wb-scrollbar-thumb-hover` | `#666` | WebKit thumb background on hover |
+| `--wb-scrollbar-thumb-inactive` | `#777` | WebKit thumb background when the window is inactive (`:window-inactive`) |
+| `--wb-scrollbar-thumb-radius` | `10px` | WebKit thumb border-radius |
+| `--wb-scrollbar-thumb-border` | `2px solid transparent` | WebKit thumb border (used as a visual outline) |
+| `--wb-scrollbar-track-bg` | `transparent` | WebKit track background |
+| `--wb-scrollbar-corner-bg` | `transparent` | WebKit corner (intersection of the two bars) background |
+
+The styling covers Firefox (`scrollbar-width` / `scrollbar-color`) and
+WebKit/Blink (`::-webkit-scrollbar`, `::-webkit-scrollbar-track`,
+`::-webkit-scrollbar-thumb` + `:hover` + `:window-inactive` and
+`::-webkit-scrollbar-corner`).
+
+> **Hide the bar but keep scrolling** — use a `no-scrollbar*` control class.
+> `overflow: auto` is never touched, so the body stays fully scrollable. The
+> rules set `display: none` **plus** `width: 0` / `height: 0` (both
+> `!important`): `display: none` hides the bar in Chrome/Edge/modern-Safari,
+> while `width: 0` / `height: 0` is a fallback for legacy Safari, which ignores
+> `display: none` on `::-webkit-scrollbar`. The `!important` also makes the hide
+> win over a *themed* `::-webkit-scrollbar { width: 12px; height: 12px }`
+> declaration (loaded last, higher specificity) — without it the bar would
+> repaint at 12px on the browsers that ignore `display: none`:
+>
+> ```js
+> winbox.addClass("no-scrollbar");     // hide on BOTH axes
+> winbox.addClass("no-scrollbar-y");   // hide only the Y (vertical) bar
+> winbox.addClass("no-scrollbar-x");   // hide only the X (horizontal) bar
+> ```
+>
+> On WebKit/Blink the `:vertical` / `:horizontal` pseudo-elements hide exactly
+> one bar. On Firefox `scrollbar-width` is per-element (not per-axis), so
+> `no-scrollbar-y` / `no-scrollbar-x` additionally set `scrollbar-width: none`,
+> which hides both bars there while scrolling stays enabled.
 
 ## Useful Hints
 

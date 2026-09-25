@@ -28,6 +28,9 @@
 //   * fluent    -> Radzen fluent-base.css
 // =============================================================================
 
+// Scrollbar styling mixin (`.wb-scrollbar-style()`), shared with winbox.less.
+@import "../scrollbar.less";
+
 // Fallback values – used when a theme does not override a given property.
 .winbox {
     --wb-header-bg:                #0050ff;
@@ -53,9 +56,26 @@
     --wb-control-hover-opacity:    1;
     --wb-control-filter:           none;
 
-    --wb-scrollbar-thumb:          #888;
-    --wb-scrollbar-thumb-inactive: #777;
+    // ---- scrollbar (variable-driven styling, see scrollbar.less) ----
+    // `size` is the legacy thumb size, used as the fallback for both axes.
     --wb-scrollbar-size:           12px;
+    // per-axis WebKit dimensions (vertical = Y, horizontal = X)
+    --wb-scrollbar-y:              var(--wb-scrollbar-size);
+    --wb-scrollbar-x:              var(--wb-scrollbar-size);
+    // Firefox: scrollbar-width ("thin" = styled, "none" = hidden)
+    --wb-scrollbar-width:          thin;
+    // Firefox scrollbar-color (thumb / track)
+    --wb-scrollbar-color-thumb:    var(--wb-scrollbar-thumb);
+    --wb-scrollbar-color-track:    transparent;
+    // WebKit thumb
+    --wb-scrollbar-thumb:          #888;
+    --wb-scrollbar-thumb-hover:    #666;
+    --wb-scrollbar-thumb-inactive: #777;
+    --wb-scrollbar-thumb-radius:   10px;
+    --wb-scrollbar-thumb-border:   2px solid transparent;
+    // WebKit track / corner
+    --wb-scrollbar-track-bg:       transparent;
+    --wb-scrollbar-corner-bg:      transparent;
 }
 
 // Pop-up animation (reused by themes that opt into it via --wb-animation).
@@ -127,27 +147,15 @@
         margin: var(--wb-body-margin);
         color: var(--wb-body-color);
         background: var(--wb-body-bg);
-
-        &::-webkit-scrollbar {
-            width: var(--wb-scrollbar-size);
-            height: var(--wb-scrollbar-size);
-        }
-
-        &::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            background: var(--wb-scrollbar-thumb);
-        }
-
-        &::-webkit-scrollbar-thumb:window-inactive {
-            background: var(--wb-scrollbar-thumb-inactive);
-        }
-
-        &::-webkit-scrollbar-corner {
-            background: transparent;
-        }
     }
+
+    // Variable-driven, custom scrollbar styling (see scrollbar.less) is OPT-IN.
+    // It is NOT emitted here so that themed windows keep the browser's native
+    // scrollbar (matching the default WinBox appearance / the public demo). The
+    // `--wb-scrollbar-*` variables above are still exposed so a themed window
+    // picks up its palette the moment it is opted in. Use the control classes
+    // declared in `control.less` at runtime:
+    //     `wb-scrollbar`        -> enable variable-driven styling
+    //     `no-scrollbar`         -> hide the bar on BOTH axes (keeps scrolling)
+    //     `no-scrollbar-y` / `-x` -> hide only that axis
 }
