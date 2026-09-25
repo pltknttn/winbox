@@ -22,6 +22,7 @@ body{
     -webkit-text-size-adjust: 100%;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
+    /*noinspection CssUnknownProperty */
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -38,6 +39,7 @@ main{
     overflow-x: hidden;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+    /*noinspection CssUnknownProperty */
     overflow-scrolling: touch;
     /*content-visibility: auto;*/
 }
@@ -57,8 +59,7 @@ header{
     margin: auto;
     max-width: 600px;
     text-align: left;
-    padding: 1.2em;
-    padding-top: 40px;
+    padding: 40px 1.2em 1.2em;
     z-index: 1;
 }
 a{
@@ -118,6 +119,7 @@ pre{
     line-height: 19px;
     -webkit-touch-callout: default !important;
     -webkit-user-select: text !important;
+    /*noinspection CssUnknownProperty */
     -khtml-user-select: text !important;
     -moz-user-select: text !important;
     -ms-user-select: text !important;

@@ -33,6 +33,7 @@
   bottom: 0;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  /*noinspection CssUnknownProperty*/
   overflow-scrolling: touch;
   will-change: contents;
   background: #fff;
@@ -229,6 +230,7 @@ body > .wb-body{
   border: 0;
 }
 body.wb-lock .winbox {
+  /*noinspection all*/
   will-change: left, top, width, height;
   transition: none;
 }
