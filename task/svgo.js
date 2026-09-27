@@ -18,9 +18,9 @@ files.forEach(function(filepath) {
         const fullPath = path.resolve(__dirname, "../", directoryPath, filepath);
 
         console.log(fullPath);
-
+ 
         const data = fs.readFileSync(fullPath, 'utf8');
-        const result = optimize(data, svgoOptions);
+        const result = optimize(data, svgoOptions ?? { plugins: [ 'preset-default' ] });
 
         fs.writeFileSync(fullPath, result.data);
     }

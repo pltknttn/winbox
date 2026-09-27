@@ -54,7 +54,7 @@ winbox/
 │   │   ├── images.less           # LESS variables: @min, @max, @close, @full, @restore
 │   │   ├── control.less          # Utility / control classes (.no-*, .wb-hide, .wb-show)
 │   │   └── themes/
-│   │       ├── theme-base.less   # Shared foundation: --wb-* variables + .wb-theme() mixin
+│   │       ├── base.less   # Shared foundation: --wb-* variables + .wb-theme() mixin
 │   │       ├── modern.less       # Gradient header, dark body, popup animation
 │   │       ├── white.less        # Flat white header, dark text, square corners
 │   │       ├── fluent.less       # Microsoft Fluent-inspired palette
@@ -167,14 +167,14 @@ This is the exact HTML string defined in `src/js/template.js` (`templateHTML`):
 
 | Element | Purpose | CSS File | JS Handler |
 |---|---|---|---|
-| `.winbox` | Root container. Receives all state classes. | `winbox.less`, `theme-base.less` | Constructor sets id, className |
+| `.winbox` | Root container. Receives all state classes. | `winbox.less`, `base.less` | Constructor sets id, className |
 | `.wb-header` | Fixed-height title bar. Contains controls + drag area. | `winbox.less` | Constructor (height/line-height set if `header` option provided) |
 | `.wb-control` | Float-right container for the 4 control buttons. | `winbox.less` | `addControl()` inserts into this |
 | `.wb-min` / `.wb-max` / `.wb-full` / `.wb-close` | Control buttons. Icons set via LESS variables (`@min`, `@max`, `@full`, `@close`). | `winbox.less` | `register()` binds click handlers |
 | `.wb-drag` | Left portion of header — draggable area + icon/title. | `winbox.less` | `addWindowListener(self, "drag")` binds mousedown |
 | `.wb-icon` | Optional titlebar icon (hidden by default). | `winbox.less` | `setIcon()` makes visible + sets background-image |
 | `.wb-title` | Title text element. | `winbox.less` | `setTitle()` sets text via `setText()` |
-| `.wb-body` | Scrollable content area. Position: absolute, top = header height. | `winbox.less`, `theme-base.less` | Constructor, `mount()`, `unmount()`, `setUrl()` |
+| `.wb-body` | Scrollable content area. Position: absolute, top = header height. | `winbox.less`, `base.less` | Constructor, `mount()`, `unmount()`, `setUrl()` |
 | `.wb-n` `.wb-s` `.wb-w` `.wb-e` | Edge resize handles (10px × full edge). | `winbox.less` | `addWindowListener(self, dir)` for each direction |
 | `.wb-nw` `.wb-ne` `.wb-sw` `.wb-se` | Corner resize handles (15px × 15px). | `winbox.less` | `addWindowListener(self, dir)` for each direction |
 
@@ -222,13 +222,13 @@ construction via the `class` option or toggled at runtime with `addClass()` /
 The theme system is built on CSS custom properties (variables) with a
 two-layer specificity strategy:
 
-1. **Fallbacks** are defined on `.winbox` (specificity 0,1,0) in `theme-base.less`.
+1. **Fallbacks** are defined on `.winbox` (specificity 0,1,0) in `base.less`.
 2. **Theme overrides** are defined on `.winbox.<theme>` (specificity 0,2,0)
    in individual theme files (`modern.less`, `white.less`, `fluent.less`,
    `material.less`, `dark.less`, `default.less`).
 
 Every theme file:
-1. `@import "theme-base.less"` — pulls in the shared foundation
+1. `@import "base.less"` — pulls in the shared foundation
 2. Declares a `.winbox.<theme>` rule that calls `.wb-theme();` (the mixin)
 3. Overrides `--wb-*` variables to set the palette
 
@@ -277,7 +277,7 @@ winbox.dom.style.setProperty("--wb-body-bg", "#e3f2fd");
 
 #### `@keyframes popup`
 
-Defined in `theme-base.less`. Scales the window from `0.8` to `1.0` with a
+Defined in `base.less`. Scales the window from `0.8` to `1.0` with a
 custom easing curve. Only themed windows with `--wb-animation: popup ...` use it;
 themes that set `--wb-animation: none` skip it.
 
@@ -570,7 +570,7 @@ npm run server      # Start local HTTP server on port 8080
 │  winbox.less ──import──► images.less (icon data URIs)              │
 │              ──import──► control.less (utility classes)              │
 │                                                                     │
-│  theme-base.less: --wb-* variables + .wb-theme() mixin             │
+│  base.less: --wb-* variables + .wb-theme() mixin             │
 │    └─ imported by ──► modern.less, white.less, fluent.less,        │
 │                       material.less, dark.less, default.less       │
 └─────────────────────────────────────────────────────────────────────┘
@@ -653,7 +653,7 @@ npm run test:coverage
 
 | Task | File(s) to Edit |
 |---|---|
-| Change window look & feel | `src/css/themes/*.less` (palette), `src/css/theme-base.less` (foundation) |
+| Change window look & feel | `src/css/themes/*.less` (palette), `src/css/base.less` (foundation) |
 | Add/modify control classes | `src/css/control.less` |
 | Change DOM structure | `src/js/template.js` |
 | Modify layout/styling | `src/css/winbox.less` |

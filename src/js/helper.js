@@ -30,10 +30,7 @@ export function removeListener(node, event, fn, opt){
 export function preventEvent(event, prevent){
 
     event.stopPropagation();
-    prevent && /*event.cancelable &&*/ event.preventDefault();
-
-    //event.stopImmediatePropagation();
-    //event.returnValue = false;
+    prevent && event.preventDefault();
 }
 
 export function getByClass(root, name){
@@ -89,6 +86,6 @@ export function removeAttribute(node, key){
 
 export function setText(node, value){
 
-    const textnode = node.firstChild;
-    textnode ? textnode.nodeValue = value : node.textContent = value;
+    const textNode = node.firstChild;
+    textNode ? textNode.nodeValue = value : node.textContent = value;
 }

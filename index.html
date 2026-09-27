@@ -79,13 +79,10 @@
             display: none;
         }
         /* Variable-driven scrollbar for the "custom" theme.
-           Only the variables that differ from the defaults are set here.
-           Add the `wb-scrollbar` class to a window to render the styled bar
-           (themes do this automatically via `.wb-theme()`). See the
-           "Custom Scrollbars" example below. */
+           Only the variables that differ from the defaults are set here
+           (the styled bar is rendered on every window; add `no-scrollbar`
+           to hide it). See the "Custom Scrollbars" example below. */
         .winbox.custom {
-            --wb-scrollbar-y:              12px;
-            --wb-scrollbar-x:              12px;
             --wb-scrollbar-width:          thin;
             --wb-scrollbar-color-thumb:    #94a3b8;
             --wb-scrollbar-color-track:    transparent;
@@ -589,27 +586,21 @@ new WinBox("Splitscreen (Right)", {
     --wb-scrollbar-thumb:          #94a3b8;
     --wb-scrollbar-thumb-inactive: #64748a;
     --wb-scrollbar-thumb-hover:    #cbd5e1;
-    --wb-scrollbar-y:              12px;
     --wb-scrollbar-width:          thin;
 }
 
 /* control classes (add via the `class` option or addClass) */
-.winbox.wb-scrollbar     /* enable the styled scrollbar (opt-in: addClass) */
 .winbox.no-scrollbar     /* hide the bar on both axes (keep scrolling) */
-.winbox.no-scrollbar-y   /* hide only the Y (vertical) bar */
-.winbox.no-scrollbar-x   /* hide only the X (horizontal) bar */
 ```</code></pre>
         <div class="break"></div>
-        <pre><code class="language-js">new WinBox("Custom CSS (wb-scrollbar)", {
-    class: "custom wb-scrollbar",
+        <pre><code class="language-js">new WinBox("Custom CSS", {
+    class: "custom",
     mount: document.getElementById("content")
                    .cloneNode(true)
 });</code></pre>
         <div class="break"></div>
         <pre><code class="language-js">// hide the bar but keep scrolling - works with any theme
 winbox.addClass("no-scrollbar");    // both axes
-winbox.addClass("no-scrollbar-y");  // only vertical
-winbox.addClass("no-scrollbar-x");  // only horizontal
 ```</code></pre>
         <div class="break"></div>
         <div class="button" onclick="window.examples['custom-css']()">Run Code</div>
@@ -995,11 +986,11 @@ new WinBox("Custom Template", { template });</code></pre>
             },
             "custom-css": function(){
 
-                new WinBox("Custom CSS (wb-scrollbar)", {
+                new WinBox("Custom CSS", {
 
                     width: 350,
                     height: 250,
-                    class: "custom wb-scrollbar",
+                    class: "custom",
                     mount: document.getElementById("content")
                                    .cloneNode(true)
                 });
@@ -1014,9 +1005,6 @@ new WinBox("Custom Template", { template });</code></pre>
                 // ignores `display:none` on the pseudo) and pair with Firefox's
                 // `scrollbar-width: none`.
                 //
-                // Per-axis variants exist too - add `no-scrollbar-y` (vertical) or
-                // `no-scrollbar-x` (horizontal) the same way via addClass(). See the
-                // "Control Classes" snippet below.
                 new WinBox("Hide Scrollbar (.no-scrollbar)", {
 
                     width: 350,

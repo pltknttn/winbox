@@ -21,15 +21,9 @@
 //
 // The defaults below live on `.winbox` (lower specificity, 0,1,0) and are
 // overridden by any `.winbox.<theme>` (0,2,0) that sets the same property.
-// Theme palettes are based on the Radzen Blazor themes:
-//   * material  -> Radzen material.scss
-//   * default   -> Radzen default.scss
-//   * dark      -> Radzen dark.scss
-//   * fluent    -> Radzen fluent-base.css
 // =============================================================================
 
-// Scrollbar styling mixin (`.wb-scrollbar-style()`), shared with winbox.less.
-@import "../scrollbar.less";
+@winbox-header-height: 35px;
 
 // Fallback values – used when a theme does not override a given property.
 .winbox {
@@ -37,7 +31,7 @@
     --wb-header-bg-unfocused:      #666;
     --wb-header-color:             #ffffff;
     --wb-header-border:            none;
-    --wb-header-height:            35px;
+    --wb-header-height:            @winbox-header-height;
 
     --wb-title-color:              #ffffff;              // adapted to the header background
     --wb-title-font-size:          13px;
@@ -48,7 +42,8 @@
     --wb-body-color:               #000000;              // adapted to the body background
     --wb-body-margin:              4px;
 
-    --wb-border-radius:            12px 12px 0 0;
+    --wb-border-radius:            12px 12px 0px 0px;
+    --wb-border-radius-max:        0px 0px 0px 0px;
     --wb-box-shadow:               0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     --wb-animation:                popup 0.3s cubic-bezier(0.3, 1, 0.3, 1) forwards;
 
@@ -57,22 +52,20 @@
     --wb-control-filter:           none;
 
     // ---- scrollbar (variable-driven styling, see scrollbar.less) ----
-    // `size` is the legacy thumb size, used as the fallback for both axes.
+    // `size` is the scrollbar thickness for both axes: WebKit `width`
+    // (vertical/Y) and `height` (horizontal/X).
     --wb-scrollbar-size:           12px;
-    // per-axis WebKit dimensions (vertical = Y, horizontal = X)
-    --wb-scrollbar-y:              var(--wb-scrollbar-size);
-    --wb-scrollbar-x:              var(--wb-scrollbar-size);
     // Firefox: scrollbar-width ("thin" = styled, "none" = hidden)
-    --wb-scrollbar-width:          thin;
-    // Firefox scrollbar-color (thumb / track)
-    --wb-scrollbar-color-thumb:    var(--wb-scrollbar-thumb);
-    --wb-scrollbar-color-track:    transparent;
+    --wb-scrollbar-width:          thin;     
     // WebKit thumb
     --wb-scrollbar-thumb:          #888;
     --wb-scrollbar-thumb-hover:    #666;
     --wb-scrollbar-thumb-inactive: #777;
     --wb-scrollbar-thumb-radius:   10px;
     --wb-scrollbar-thumb-border:   2px solid transparent;
+    // Firefox scrollbar-color (thumb / track)
+    --wb-scrollbar-color-thumb:    var(--wb-scrollbar-thumb);
+    --wb-scrollbar-color-track:    transparent;
     // WebKit track / corner
     --wb-scrollbar-track-bg:       transparent;
     --wb-scrollbar-corner-bg:      transparent;
@@ -83,6 +76,8 @@
     0%   { transform: scale(0.8); }
     100% { transform: scale(1);  }
 }
+
+@import "../scrollbar.less";
 
 // Shared WinBox theme ruleset – consumes the `--wb-*` custom properties above.
 // Call it from inside `.winbox.<theme>` (it inherits/overrides the `.winbox`
@@ -97,45 +92,46 @@
 
     // dimmed header while the window is not focused (and not minimized)
     &:not(.min, .focus) {
-        background: var(--wb-header-bg-unfocused);
+        background: var(--wb-header-bg-unfocused, #666);
     }
 
     // hover fix for mobile devices which keeps the :hover state when touched
     @media (hover: hover) {
         &.min:not(:hover) {
-            background: var(--wb-header-bg-unfocused);
+            background: var(--wb-header-bg-unfocused, #666);
         }
 
         .wb-control * {
-            opacity: var(--wb-control-opacity);
+            opacity: var(--wb-control-opacity, 0.65);
         }
 
         .wb-control *:hover {
-            opacity: var(--wb-control-hover-opacity);
+            opacity: var(--wb-control-hover-opacity, 1);
         }
     }
 
     @media (hover: none) {
         &.min {
-            background: var(--wb-header-bg-unfocused);
+            background: var(--wb-header-bg-unfocused, #666);
         }
     }
 
     &.max {
-        border-radius: 0;
+        border-radius: var(--wb-border-radius-max, 0);
     }
 
     .wb-header {
-        height: var(--wb-header-height);
+        height: var(--wb-header-height, @winbox-header-height);
+        line-height: var(--wb-header-height, @winbox-header-height);
         color: var(--wb-header-color);
         border-bottom: var(--wb-header-border);
     }
 
     .wb-title {
         color: var(--wb-title-color);
-        font-size: var(--wb-title-font-size);
-        font-weight: var(--wb-title-font-weight);
-        text-transform: var(--wb-title-text-transform);
+        font-size: var(--wb-title-font-size, 13px);
+        font-weight: var(--wb-title-font-weight, 600);
+        text-transform: var(--wb-title-text-transform, uppercase);
     }
 
     .wb-control {
@@ -144,18 +140,8 @@
 
     .wb-body {
         // width of window border:
-        margin: var(--wb-body-margin);
-        color: var(--wb-body-color);
-        background: var(--wb-body-bg);
+        margin: var(--wb-body-margin, 4px);
+        color: var(--wb-body-color, #fff);
+        background: var(--wb-body-bg, #131820);
     }
-
-    // Variable-driven, custom scrollbar styling (see scrollbar.less) is OPT-IN.
-    // It is NOT emitted here so that themed windows keep the browser's native
-    // scrollbar (matching the default WinBox appearance / the public demo). The
-    // `--wb-scrollbar-*` variables above are still exposed so a themed window
-    // picks up its palette the moment it is opted in. Use the control classes
-    // declared in `control.less` at runtime:
-    //     `wb-scrollbar`        -> enable variable-driven styling
-    //     `no-scrollbar`         -> hide the bar on BOTH axes (keeps scrolling)
-    //     `no-scrollbar-y` / `-x` -> hide only that axis
 }

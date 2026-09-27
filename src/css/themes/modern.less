@@ -2,24 +2,24 @@
 //
 // Original modern theme: gradient header, dark body, popup animation and a
 // dimmed header while the window is not focused.
-// All colors are exposed as CSS custom properties (see theme-base.less), so
+// All colors are exposed as CSS custom properties (see base.less), so
 // they can be overridden dynamically at runtime, e.g.:
 //
 //     wb.dom.style.setProperty("--wb-body-bg", "#000");
-
-@import "theme-base.less";
+@import "base.less";
 
 .winbox.modern {
     .wb-theme();
-
-    // ---- palette (Radzen-ish, original modern look) ----
+    
     --wb-header-bg:              linear-gradient(90deg, #ff00f0, #0050ff);
     --wb-header-bg-unfocused:    #666;
     --wb-header-color:           #ffffff;
     --wb-title-color:            #ffffff;
     --wb-body-bg:                #131820;
     --wb-body-color:             #ffffff;
-    --wb-scrollbar-thumb:        #94a3b8;
-    --wb-scrollbar-thumb-inactive: #64748a;
+    --wb-scrollbar-thumb:          #263040;              // visible thumb - matches the public demo
+    --wb-scrollbar-thumb-hover:    #3a4a60;              // lighter on hover (still visible on #131820)
+    --wb-scrollbar-thumb-inactive: #181f2a;              // matches the public demo
+    --wb-scrollbar-color-thumb:    #93c5fd;              // Firefox thumb: light, stays visible on the dark body
     --wb-border-radius:          12px 12px 0 0;
 }

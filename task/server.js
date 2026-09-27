@@ -43,7 +43,7 @@ const server = http.createServer((req, res) => {
     const ext = path.parse(pathname).ext;
     const mimeType = mimeTypes[ext] || 'application/octet-stream';
     
-    fs.readFile(pathname, (err, data) => {
+    fs.readFile(pathname, (err, data) => {    
         if (err) {
             res.writeHead(404);
             res.end('File Not Found: ' + pathname);

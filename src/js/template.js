@@ -34,5 +34,6 @@ export default function(tpl){
         template = document.createElement('div');
         template.innerHTML = templateHTML;
     }
-    return (tpl || template).cloneNode(true);
+    const node = tpl || template;
+    return node?.cloneNode(true);
 }

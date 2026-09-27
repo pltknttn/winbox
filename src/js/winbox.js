@@ -384,16 +384,9 @@ function setup(){
     );
 
     addListener(window, "resize", function(){
-
+        
         init();
         update_min_stack();
-
-        // TODO adjust window sizes #151
-
-        // for(let i = 0; i < stack_win.length; i++){
-        //
-        //     stack_win[i].resize().move();
-        // }
     });
 
     addListener(body, "mousedown", function(_){

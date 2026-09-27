@@ -1,124 +1,17 @@
+## This project is a fork. Original version: <a href="https://nextapps-de.github.io/winbox/">nextapps-winbox</a>.
+
+## I have little time to make changes. 
+# You are free to use my code and publish this project, but please keep in mind that I may not always be able to find the time to fix bugs.
+
+---
+
 <h1>
     <img src="https://cdn.jsdelivr.net/gh/nextapps-de/winbox@master/demo/winbox-gradient.svg" alt="WinBox.js: A modern HTML5 window manager for the web." width="100%">
 </h1>
 <h3>Modern window manager for the web: lightweight, outstanding performance, no dependencies, fully customizable, open source!</h3>
-
-<a target="_blank" href="https://www.npmjs.com/package/winbox"><img src="https://img.shields.io/npm/v/winbox.svg"></a><!--<a target="_blank" href="https://github.com/nextapps-de/winbox/issues"><img src="https://img.shields.io/github/issues/nextapps-de/winbox.svg"></a>-->
-<a target="_blank" href="https://github.com/nextapps-de/winbox/blob/master/LICENSE.md"><img src="https://img.shields.io/npm/l/winbox.svg"></a>
-
-<a href="https://nextapps-de.github.io/winbox/">Demo</a> &ensp;&bull;&ensp; <a href="#started">Getting Started</a> &ensp;&bull;&ensp; <a href="#options">Options</a> &ensp;&bull;&ensp; <a href="#api">API</a> &ensp;&bull;&ensp; <a href="#themes">Themes</a> &ensp;&bull;&ensp; <a href="#customize">Customize</a> &ensp;&bull;&ensp; <a href="CHANGELOG.md">Changelog</a>
-
-<a name="demo"></a>
-### Live Demo and Code Examples
-
-<a href="https://nextapps-de.github.io/winbox/">https://nextapps-de.github.io/winbox/ </a>
-
-## Support this Project
-
-Hello my name is Thomas, also known as ts-thomas. This is a personal project which I fully made in my free time. It is hosted by the Github account from the company Nextapps where I work to give it more exposure.
-I have never received any financial support for this project from the company Nextapps as some of you might have guessed, since it is a free and open source project.
-I'm really happy that WinBox.js is getting so much positive feedback and also feature requests. Please feel free to support me by making a personal donation which helps me a lot to keep this project alive and also to providing all the contribution to keep WinBox.js on a professional top-end level.
-
-<a href="https://opencollective.com/winboxjs/donate" target="_blank" style="margin-right: 10px">
-    <img src="https://opencollective.com/webpack/donate/button@2x.png?color=blue" height="32" alt="Donate using Open Collective">
-</a>
-<a href="https://github.com/sponsors/ts-thomas/" target="_blank" style="margin-right: 10px">
-    <img src="https://camo.githubusercontent.com/b932f45963b659dfeb86b77ff29a9eaebe25a734d63a17a176aa82bf34845cf2/68747470733a2f2f696d672e736869656c64732e696f2f7374617469632f76313f6c6162656c3d53706f6e736f72266d6573736167653d254532253944254134266c6f676f3d47697448756226636f6c6f723d253233666538653836" height="32" alt="Donate using Github Sponsors">
-</a>
-<a href="https://liberapay.com/ts-thomas/donate" target="_blank" style="margin-right: 10px">
-    <img src="https://liberapay.com/assets/widgets/donate.svg" height="32" alt="Donate using Liberapay">
-</a>
-<a href="https://www.patreon.com/user?u=96245532" target="_blank" style="margin-right: 10px">
-    <img src="https://s3-us-west-1.amazonaws.com/widget-images/become-patron-widget-medium%402x.png" height="32" alt="Donate using Patreon">
-</a>
-<a href="https://salt.bountysource.com/teams/ts-thomas" target="_blank" style="margin-right: 10px">
-    <img src="https://d2bbtvgnhux6eq.cloudfront.net/assets/logos/alternate-7868987b01474c95f47678727f6657882f6565a36396eb4b637ea53cc5944ff8.svg" height="32" alt="Donate using Bountysource">
-</a>
-<a href="https://www.paypal.com/donate/?hosted_button_id=GEVR88FC9BWRW" target="_blank">
-    <img src="https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-200px.png" height="32" alt="Donate using PayPal">
-</a>
-<!-- [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/ts-thomas/) -->
-<br><br>
-Thanks a lot,
-Thomas (ts-thomas)
-
-<a name="addon"></a>
-### Plugins / Add-ons / Extensions
-Vue 2 and 3 (a wrapper component that adds the ability to mount Vue components in WinBox.js):<br>
-<a href="https://github.com/wobsoriano/vue-winbox">https://github.com/wobsoriano/vue-winbox</a>
-
-A React controlled component for WinBox.js, with full Reactful props and state.:<br>
-<a href="https://github.com/rickonono3/react-winbox">https://github.com/rickonono3/react-winbox</a>
-
-<a name="started"></a>
-## Getting Started
-
-__Get Latest Stable Build (Recommended):__
-
-<table>
-    <tr>
-        <td colspan=3">
-            <b><u>Bundle:</u></b> (all assets bundled into one single file: js + css + html + icons)
-        </td>
-    </tr>
-    <tr>
-        <td>winbox.bundle.min.js</td>
-        <td><a href="https://github.com/nextapps-de/winbox/raw/0.2.83/dist/winbox.bundle.min.js" target="_blank">Download</a></td>
-        <td><a href="https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/dist/winbox.bundle.min.js" target="_blank">https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/dist/winbox.bundle.min.js</a></td>
-    </tr>
-    <tr>
-        <td colspan=3">
-            <br><b><u>Non-Bundled:</u></b> (js and css are separated, css includes icons as base64)
-        </td>
-    </tr>
-    <tr>
-        <td>winbox.min.js</td>
-        <td><a href="https://github.com/nextapps-de/winbox/raw/0.2.83/dist/js/winbox.min.js" target="_blank">Download</a></td>
-        <td><a href="https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/dist/js/winbox.min.js" target="_blank">https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/dist/js/winbox.min.js</a></td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td>winbox.min.css</td>
-        <td><a href="https://github.com/nextapps-de/winbox/raw/0.2.83/dist/css/winbox.min.css" target="_blank">Download</a></td>
-        <td><a href="https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/dist/css/winbox.min.css" target="_blank">https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/dist/css/winbox.min.css</a></td>
-    </tr>
-    <tr>
-        <td colspan=3">
-            <br><b><u>Sources:</u></b> (not bundled at all, images as url to original resources)
-        </td>
-    </tr>
-    <tr>
-        <td>ES6 Modules</td>
-        <td><a href="https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/nextapps-de/winbox/tree/0.2.83/src/js" target="_blank">Download</a></td>
-        <td>The <i>/src/js</i> folder of this Github repository</td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td>LESS Files (source)</td>
-        <td><a href="https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/nextapps-de/winbox/tree/0.2.83/src/css" target="_blank">Download</a></td>
-        <td>The <i>/src/css</i> folder of this Github repository</td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td>winbox.css (compiled)</td>
-        <td><a href="https://github.com/nextapps-de/winbox/raw/0.2.83/src/css/winbox.css" target="_blank">Download</a></td>
-        <td><a href="https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/src/css/winbox.css" target="_blank">https://rawcdn.githack.com/nextapps-de/winbox/0.2.83/src/css/winbox.css</a></td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td>src.zip</td>
-        <td><a href="https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/nextapps-de/winbox/tree/0.2.83/dist" target="_blank">Download</a></td>
-        <td>Download all source files including image original resources.</td>
-    </tr>
-</table>
-
-__Get Latest (NPM):__
-
-```cmd
-npm install winbox
-```
-
-### Use Bundled Version (Recommended)
+ 
+ 
+### Use Bundled Version
 
 > The bundled version includes all assets like js, css, html and icon images as base64.
 
@@ -759,7 +652,7 @@ winbox.dom.style.setProperty("--wb-title-color", "#ffeb3b");
 // style the scrollbar thumb of this themed window
 winbox.dom.style.setProperty("--wb-scrollbar-thumb", "#3367d6");
 // make the scrollbar thinner on this window (WebKit/Blink)
-winbox.dom.style.setProperty("--wb-scrollbar-y", "8px");
+winbox.dom.style.setProperty("--wb-scrollbar-size", "8px");
 ```
 
 ## Manage Window Content
@@ -1282,23 +1175,8 @@ WinBox provides you some built-in control classes you can pass when creating a w
     </tr>
     <tr></tr>
     <tr>
-        <td>wb-scrollbar</td>
-        <td>Enables the variable-driven custom scrollbar on <b>any</b> window (themed or non-themed). Styling is opt-in and is never applied automatically. See <a href="#style-scrollbars">Style Scrollbars</a>.</td>
-    </tr>
-    <tr></tr>
-    <tr>
         <td>no-scrollbar</td>
-        <td>Hides the scrollbar but keeps the window body fully scrollable (both axes). Works alongside `wb-scrollbar` and any theme.</td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td>no-scrollbar-y</td>
-        <td>Hides only the vertical (Y) scrollbar, keeps the horizontal bar and scrolling</td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td>no-scrollbar-x</td>
-        <td>Hides only the horizontal (X) scrollbar, keeps the vertical bar and scrolling</td>
+        <td>The scrollbar is rendered on every window. Add `no-scrollbar` to hide it (both axes) while keeping the body fully scrollable.</td>
     </tr>
 </table>
 
@@ -1645,19 +1523,26 @@ Customize the modal background overlay:
 <a name="style-scrollbars" id="style-scrollbars"></a>
 #### Style Scrollbars
 
-Scrollbar styling is **opt-in** and fully driven by CSS custom properties.
+Scrollbar styling is always on and fully driven by CSS custom properties.
+**Themed** windows pull colours from their `--wb-scrollbar-*` palette (matching the
+public demo); **plain (non-themed)** windows use the defaults declared in `base.less`.
+There is no opt-in class — the bar is always rendered; add `no-scrollbar` to hide it.
 
 | Scope | How to enable |
 | --- | --- |
-| **Any window (themed or not)** | add the `wb-scrollbar` control class — a theme only exposes its `--wb-scrollbar-*` palette; styling is opt-in, never automatic |
+| **Themed window** | automatic — the theme's `--wb-scrollbar-*` palette is applied |
+| **Plain (non-themed) window** | automatic — the `base.less` defaults apply |
+| **Hide the bar** | add the `no-scrollbar` control class |
 
 ```js
-// non-themed window -> enable the variable-driven scrollbar
-// enable the variable-driven scrollbar on ANY window (themed or non-themed)
-const winbox = new WinBox("Scroll me", { class: "wb-scrollbar" });
+// styled automatically — no class needed:
+const winbox = new WinBox("Scroll me");        // plain window
 
-// a theme only exposes its palette -- add `wb-scrollbar` to render the styled bar
-const themed = new WinBox("Themed", { class: "material wb-scrollbar" });
+// themed window -> uses the theme's palette automatically:
+const themed = new WinBox("Themed", { class: "material" });
+
+// hide the bar (both axes) but keep scrolling:
+const hidden = new WinBox("Hidden", { class: "material no-scrollbar" });
 ```
 
 All colors and sizes come from the `--wb-scrollbar-*` custom properties declared
@@ -1667,17 +1552,15 @@ look, e.g.:
 ```js
 winbox.dom.style.setProperty("--wb-scrollbar-thumb", "#3367d6");
 winbox.dom.style.setProperty("--wb-scrollbar-thumb-hover", "#204a9d");
-winbox.dom.style.setProperty("--wb-scrollbar-y", "8px");
+winbox.dom.style.setProperty("--wb-scrollbar-size", "8px");
 ```
 
-Available variables (declared in `src/css/themes/theme-base.less`, overridable on
+Available variables (declared in `src/css/themes/base.less`, overridable on
 `.winbox.<theme>` or per window):
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `--wb-scrollbar-size` | `12px` | Base scrollbar thickness (fallback for both axes) |
-| `--wb-scrollbar-y` | `var(--wb-scrollbar-size)` | Vertical (Y) scrollbar thickness (`width`) |
-| `--wb-scrollbar-x` | `var(--wb-scrollbar-size)` | Horizontal (X) scrollbar thickness (`height`) |
+| `--wb-scrollbar-size` | `12px` | Scrollbar thickness for both axes (`width` vertical, `height` horizontal) |
 | `--wb-scrollbar-width` | `thin` | Firefox: `scrollbar-width` (`thin` = styled, `none` = hidden) |
 | `--wb-scrollbar-color-thumb` | `var(--wb-scrollbar-thumb)` | Firefox `scrollbar-color` thumb color |
 | `--wb-scrollbar-color-track` | `transparent` | Firefox `scrollbar-color` track color |
@@ -1706,14 +1589,8 @@ WebKit/Blink (`::-webkit-scrollbar`, `::-webkit-scrollbar-track`,
 >
 > ```js
 > winbox.addClass("no-scrollbar");     // hide on BOTH axes
-> winbox.addClass("no-scrollbar-y");   // hide only the Y (vertical) bar
-> winbox.addClass("no-scrollbar-x");   // hide only the X (horizontal) bar
 > ```
 >
-> On WebKit/Blink the `:vertical` / `:horizontal` pseudo-elements hide exactly
-> one bar. On Firefox `scrollbar-width` is per-element (not per-axis), so
-> `no-scrollbar-y` / `no-scrollbar-x` additionally set `scrollbar-width: none`,
-> which hides both bars there while scrolling stays enabled.
 
 ## Useful Hints
 
@@ -1778,19 +1655,6 @@ export class AppComponent {
 }
 ```
 
-## WinBox on Vue application
-
-https://github.com/wobsoriano/vue-winbox
-
-It uses the native [teleport](https://v3.vuejs.org/api/built-in-components.html#teleport) component in Vue 3 and recommends https://github.com/LinusBorg/vue-simple-portal for Vue 2 users.
-
-
-## WinBox on React application
-
-https://github.com/rickonono3/react-winbox
-
-A React controlled component for WinBox.js, with full Reactful props and state. Includes all configurations of WinBox.js by using React component props.
-
 ## Custom Builds
 
 Go to the root directory of WinBox and run:
@@ -1807,5 +1671,5 @@ The final build is located in the `dist/` folder.
 
 ---
 
-Copyright 2021-2023 Thomas Wilkerling, Hosted by Nextapps GmbH<br>
+Copyright 2026<br>
 Released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2.0 License</a><br>
