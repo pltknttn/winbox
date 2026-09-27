@@ -69,17 +69,7 @@ The ES6 modules are located in `src/js/`. But you need to load the stylesheet fi
   import WinBox from "./src/js/winbox.js";
 </script>
 ```
-
-You can also load modules via CDN, e.g.:
-
-```html
-<script type="module">
-  import WinBox from "https://unpkg.com/winbox@0.2.83/src/js/winbox.js";
-</script>
-```
-
-The ES6 modules are not minified. Please use your favored bundler or build tool for this purpose.
-
+ 
 <a name="api"></a>
 ## Overview
 

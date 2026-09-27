@@ -1,4 +1,4 @@
-## v0.2.83
+## v0.2.9
 
 -  update dependencies
 -  add optional, variable-driven scrollbar styling via the `wb-scrollbar`

@@ -2,7 +2,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
 
 const port = process.argv[2] || (process.platform.startsWith('win') ? 80 : 8080);
 const rootDir = path.join(__dirname, '..');
@@ -26,7 +25,7 @@ const mimeTypes = {
 };
 
 const server = http.createServer((req, res) => {
-    const parsedUrl = url.parse(req.url);
+    const parsedUrl = new URL(req.url, 'http://localhost');
     let pathname = `.${parsedUrl.pathname}`;
     
     // Handle directory paths
