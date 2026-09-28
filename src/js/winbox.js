@@ -263,13 +263,14 @@ function WinBox(params, _title){
     this.left = left;
     this.index = index;
     this.overflow = overflow;
-    //this.border = border;
+    this.border = border;
+    this.autosize = autosize;
     this.min = false;
     this.max = false;
     this.full = false;
     this.hidden = false;
     this.focused = false;
-
+        
     this.onclose = onclose;
     this.onfocus = onfocus;
     this.onblur = onblur;
@@ -282,6 +283,8 @@ function WinBox(params, _title){
     this.onhide = onhide;
     this.onshow = onshow;
 
+    this._manualResize = false;
+    
     if(hidden){
 
         this.hide();
@@ -314,6 +317,11 @@ function WinBox(params, _title){
     register(this);
     (root || body).appendChild(this.dom);
     oncreate && oncreate.call(this, params);
+
+    if(autosize){
+
+        this._startAutosize();
+    }
 }
 
 WinBox["new"] = function(params){
@@ -595,6 +603,10 @@ function addWindowListener(self, dir){
         if(/*!self.max &&*/ !self.min){
 
             addClass(body, "wb-lock");
+
+            // the user grabbed the window — mark it so the next resize() call
+            // knows this is a manual (user-driven) resize, not an automatic one
+            self._manualResize = true;
             use_raf && loop();
 
             if((touch = event.touches) && (touch = touch[0])){
@@ -768,6 +780,7 @@ function addWindowListener(self, dir){
 
         preventEvent(event);
         removeClass(body, "wb-lock");
+        self._manualResize = false;
         use_raf && cancelAnimationFrame(raf_timer);
 
         if(touch){
@@ -1214,6 +1227,9 @@ WinBox.prototype.close = function(force) {
         return true;
     }
 
+    // stop autosize monitoring before the DOM nodes are destroyed
+    this._stopAutosize();
+
     if(this.min){
 
         remove_min_stack(this);
@@ -1267,6 +1283,17 @@ WinBox.prototype.move = function(x, y, _skip_update){
 
 WinBox.prototype.resize = function(w, h, _skip_update){
 
+    // a user-driven resize (drag on a border) releases autosize: the window
+    // keeps the size the user chose and stops following its content. after this
+    // the autosize monitoring (observer + interval) is torn down, so autoResize()
+    // is no longer invoked automatically. programmatic resize() calls made by
+    // autoResize() itself are ignored here (_manualResize is only set on a drag).
+    if(this._manualResize && this.autosize){
+
+        this.autosize = false;
+        this._stopAutosize();
+    }
+
     if(!w && (w !== 0)){
 
         w = this.width;
@@ -1285,6 +1312,248 @@ WinBox.prototype.resize = function(w, h, _skip_update){
     setStyle(this.dom, "height", h + "px");
 
     this.onresize && this.onresize(w, h);
+    return this;
+};
+
+/**
+ * Measures the natural (intrinsic) size of the window content.
+ *
+ * The body is temporarily "unclamped" (its absolute fill constraints are
+ * removed) so it reports its intrinsic content size instead of the size of the
+ * (possibly smaller) window. This works whether the content overflows (a scroll
+ * bar would appear) or fits (there is empty space). All inline styles are
+ * restored after wards, so the visible layout is never affected — everything
+ * happens synchronously inside one task, before the next paint.
+ *
+ * @param {WinBox} self
+ * @return {{ width:number, height:number }}
+ */
+
+function measure_content(self){
+
+    const body = self.body;
+
+    if(!body){
+
+        return { width: 0, height: 0 };
+    }
+
+    const style = body.style;
+    const right = style.right;
+    const bottom = style.bottom;
+    const width = style.width;
+    const height = style.height;
+    const overflow = style.overflow;
+
+    // unclamp: let the body shrink to its intrinsic content size
+    style.right = "auto";
+    style.bottom = "auto";
+    style.width = "auto";
+    style.height = "auto";
+    style.overflow = "visible";
+
+    let content_width = 0;
+    let content_height = 0;
+
+    try{
+
+        // scroll* always reflects the full intrinsic content size — even when
+        // the body would otherwise be shrink-wrapped to a zero / window box
+        content_width = body.scrollWidth;
+        content_height = body.scrollHeight;
+    }
+    finally{
+
+        // always restore, even if reading the metrics threw — no style leak
+        style.right = right;
+        style.bottom = bottom;
+        style.width = width;
+        style.height = height;
+        style.overflow = overflow;
+    }
+
+    return { width: content_width, height: content_height };
+}
+
+/**
+ * Automatically resizes (and repositions) the window so it always fits its
+ * content. The size is only changed when it is really needed:
+ *
+ *  - the content grew beyond the current window, i.e. a scroll bar would appear
+ *    and the maximum size has not been reached yet, or
+ *  - the content shrank so that the current window holds at least twice the
+ *    computed size (a lot of empty space).
+ *
+ * The position is shifted proportionally to the size difference (the center of
+ * the window stays put) and clamped to the viewport / boundaries. The size is
+ * always clamped to the configured min/max bounds.
+ *
+ * Does nothing while the window is fullscreen, maximized, minimized, hidden or
+ * being dragged/resized by the user.
+ *
+ * @this WinBox
+ */
+
+WinBox.prototype.autoResize = function(){
+
+    if(!this.dom || !this.body){
+
+        return this;
+    }
+
+    // skip fullscreen / maximize / minimize / hidden — resizing makes no sense
+    if(this.full || this.max || this.min || this.hidden){
+
+        return this;
+    }
+
+    // do not interfere while the user is actively dragging/resizing the window
+    if(body && hasClass(body, "wb-lock")){
+
+        return this;
+    }
+
+    const border = this.border || 0;
+
+    const content = measure_content(this);
+
+    // mirror the constructor: content + borders + frame + 1, clamped to [min,max]
+    let target_w = Math.max(Math.min(content.width + border * 2 + 1, this.maxwidth), this.minwidth);
+    let target_h = Math.max(Math.min(content.height + this.header + border + 1, this.maxheight), this.minheight);
+
+    const grow_w = target_w > this.width;
+    const grow_h = target_h > this.height;
+    const shrink_w = this.width >= target_w * 2;
+    const shrink_h = this.height >= target_h * 2;
+
+    // nothing meaningful changed — leave size & position untouched
+    if(!grow_w && !grow_h && !shrink_w && !shrink_h){
+
+        return this;
+    }
+
+    const new_w = (grow_w || shrink_w) ? target_w : this.width;
+    const new_h = (grow_h || shrink_h) ? target_h : this.height;
+
+    // already at the wanted size (e.g. clamped to a bound) — avoid a repaint
+    if(new_w === this.width && new_h === this.height){
+
+        return this;
+    }
+
+    const delta_w = new_w - this.width;
+    const delta_h = new_h - this.height;
+
+    // move proportional to the difference (the center of the window stays put)
+    let new_x = this.x - delta_w / 2;
+    let new_y = this.y - delta_h / 2;
+
+    let max_x, min_x, max_y, min_y;
+
+    if(this.overflow){
+
+        max_x = root_w - 30;
+        min_x = 30 - new_w;
+        max_y = root_h - this.header;
+        min_y = this.top;
+    }
+    else{
+
+        max_x = root_w - new_w - this.right;
+        min_x = this.left;
+        max_y = root_h - new_h - this.bottom;
+        min_y = this.top;
+    }
+
+    new_x = Math.max(min_x, Math.min(new_x, max_x));
+    new_y = Math.max(min_y, Math.min(new_y, max_y));
+
+    new_x = Math.round(new_x);
+    new_y = Math.round(new_y);
+
+    this.resize(new_w, new_h).move(new_x, new_y);
+
+    return this;
+};
+
+/**
+ * Starts watching the window content for size changes (used together with the
+ * `autosize` option).
+ *
+ * A MutationObserver reacts to content changes instantly, while a timer works as
+ * a safety net for layout changes that are not triggered by DOM mutations
+ * (e.g. iframes loading, dynamic stylesheets, viewport changes). Everything is
+ * released again in {@link WinBox#_stopAutosize} (called from
+ * {@link WinBox#close}) to avoid leaking listeners / timers.
+ *
+ * @this WinBox
+ */
+
+WinBox.prototype._startAutosize = function(){
+
+    if(this._autosizeObserver || this._autosizeTimer){
+
+        return this;
+    }
+
+    const self = this;
+
+    function check(){
+
+        self.autoResize();
+    }
+
+    if(typeof MutationObserver !== "undefined"){
+
+        const observer = new MutationObserver(function(){
+
+            check();
+        });
+
+        const observerOptions = {
+            childList: true,
+            subtree: true,
+            characterData: true
+        };
+        
+        observer.observe(this.body, observerOptions);
+
+        this._autosizeObserver = observer;
+    }
+
+    this._autosizeTimer = setInterval(function(){
+
+        check();
+    }, 800);
+
+    // fit the window to its content right away — this runs synchronously, before
+    // the first paint, so there is no visual flash
+    check();
+
+    return this;
+};
+
+/**
+ * Stops the autosize content monitoring and releases every listener / timer
+ * attached by {@link WinBox#_startAutosize}.
+ *
+ * @this WinBox
+ */
+
+WinBox.prototype._stopAutosize = function(){
+
+    if(this._autosizeObserver){
+
+        this._autosizeObserver.disconnect();
+        this._autosizeObserver = null;
+    }
+
+    if(this._autosizeTimer){
+
+        clearInterval(this._autosizeTimer);
+        this._autosizeTimer = null;
+    }
+
     return this;
 };
 

@@ -1,12 +1,39 @@
 @import "images.less";
-@winbox-header-height: 35px;
+@import "scrollbar.less";
 
-.winbox {
+@winbox-header-height: 35px;
+@winbox-border-radius: 12px;
+
+.winbox {  
+  --wb-header-bg:                #0050ff;
+  --wb-header-bg-unfocused:      #666;
+  --wb-header-color:             #fff;
+  --wb-header-border:            none;
+  --wb-header-height:            @winbox-header-height;
+   
+  --wb-title-color:              var(--wb-header-color, #fff);              // adapted to the header background
+  --wb-title-font-size:          14px;
+  --wb-title-font-weight:        600;
+  --wb-title-text-transform:     none;
+  
+  --wb-body-bg:                  #fff;
+  --wb-body-color:               #000;              // adapted to the body background
+  --wb-body-margin:              4px;
+
+  --wb-border-radius:            @winbox-border-radius @winbox-border-radius 0px 0px;
+  --wb-box-shadow:               0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  --wb-animation:                wb-popup-in 0.3s cubic-bezier(0.3, 1, 0.3, 1) forwards;
+
+  --wb-control-opacity:          0.65;
+  --wb-control-hover-opacity:    1;
+  --wb-control-filter:           none;
+     
   position: fixed;
   left: 0;
   top: 0;
-  background: #0050ff;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  background: var(--wb-header-bg, #0050ff);
+  border-radius: var(--wb-border-radius, 0px);
+  box-shadow: var(--wb-box-shadow, 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22));
   /* using transform make contents blur when applied and requires more gpu memory */
   //transition: width .3s, height .3s, transform .3s;
   transition: width .3s, height .3s, left .3s, top .3s;
@@ -25,16 +52,17 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: @winbox-header-height;
-  line-height: @winbox-header-height;
-  color: #fff;
+  height: var(--wb-header-height, @winbox-header-height);
+  line-height: var(--wb-header-height, @winbox-header-height);
+  color: var(--wb-header-color, #fff);
+  background: transparent;
   overflow: hidden;
   z-index: 1;
 }
 
 .wb-body {
   position: absolute;
-  top: @winbox-header-height;
+  top: var(--wb-header-height, @winbox-header-height);
   left: 0;
   right: 0;
   bottom: 0;
@@ -44,7 +72,8 @@
   //noinspection CssUnknownProperty
   overflow-scrolling: touch;
   will-change: contents;
-  background: #fff;
+  background: var(--wb-body-bg, #fff);
+  color: var(--wb-body-color, #000);
   /* when no border is set there is some thin line visible */
   //margin: -1px;
   /* always hide top border visually */
@@ -70,10 +99,14 @@ body > .wb-body{
 
 .wb-title{
   font-family : Arial, sans-serif;
-  font-size: 14px;
+  font-size: var(--wb-title-font-size, 14px);
+  font-weight: var(--wb-title-font-weight, 500);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transform: var(--wb-title-text-transform, none);
+  color: var(--wb-title-color, #fff);
+  background: transparent;
 }
 
 .wb-icon {
@@ -315,6 +348,10 @@ body.wb-lock iframe {
     opacity: 0.85;
   }
 }
+ 
+@keyframes wb-popup-in {
+  0%   { transform: scale(0.8); }
+  100% { transform: scale(1);  }
+}
 
-@import "scrollbar.less";
 @import "control.less";

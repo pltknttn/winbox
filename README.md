@@ -18,7 +18,7 @@
 A best practice is to load the library as async and use some modern preloading mechanism:
 
 ```html
-<html>
+<html lang="en">
 <head>
     <link rel="preload" href="winbox.bundle.min.js" as="script">
 </head>
@@ -43,7 +43,7 @@ When you get troubles with unavailable references then remove the `async` or `de
 The non-bundled version needs to load js and css separately (css already includes icons as base64).
 
 ```html
-<html>
+<html lang="en">
 <head>
     <link rel="stylesheet" href="winbox.min.css">
     <script src="winbox.min.js"></script>
@@ -1172,7 +1172,7 @@ WinBox provides you some built-in control classes you can pass when creating a w
 
 > Without the header the user isn't able to move the window frame. It may be useful for creating fixed popups.
 
-Pass in classnames when creating the window to apply behaviour:
+Pass in classnames when creating the window to apply behavior:
 ```js
 const winbox = WinBox({
     class: [ "no-min", "no-max", "no-full", "no-resize", "no-move" ]
@@ -1347,7 +1347,7 @@ Hide or disable specific icons:
 Modify a specific icon:
 ```css
 .wb-max {
-    background-image: url(src/img/max.png);
+    background-image: url(demo/max.png);
     background-position: center;
     background-size: 15px auto;
 }
@@ -1514,7 +1514,7 @@ Customize the modal background overlay:
 #### Style Scrollbars
 
 Scrollbar styling is always on and fully driven by CSS custom properties.
-**Themed** windows pull colours from their `--wb-scrollbar-*` palette (matching the
+**Themed** windows pull colors from their `--wb-scrollbar-*` palette (matching the
 public demo); **plain (non-themed)** windows use the defaults declared in `base.less`.
 There is no opt-in class — the bar is always rendered; add `no-scrollbar` to hide it.
 
@@ -1559,8 +1559,8 @@ Available variables (declared in `src/css/themes/base.less`, overridable on
 | `--wb-scrollbar-thumb-inactive` | `#777` | WebKit thumb background when the window is inactive (`:window-inactive`) |
 | `--wb-scrollbar-thumb-radius` | `10px` | WebKit thumb border-radius |
 | `--wb-scrollbar-thumb-border` | `2px solid transparent` | WebKit thumb border (used as a visual outline) |
-| `--wb-scrollbar-track-bg` | `transparent` | WebKit track background |
-| `--wb-scrollbar-corner-bg` | `transparent` | WebKit corner (intersection of the two bars) background |
+| `--wb-scrollbar-track` | `transparent` | WebKit track background |
+| `--wb-scrollbar-corner` | `transparent` | WebKit corner (intersection of the two bars) background |
 
 The styling covers Firefox (`scrollbar-width` / `scrollbar-color`) and
 WebKit/Blink (`::-webkit-scrollbar`, `::-webkit-scrollbar-track`,

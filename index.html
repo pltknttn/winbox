@@ -14,14 +14,14 @@
     <script src="dist/js/winbox.min.js"></script>
 
     <!-- Optional standard themes: -->
+  
     <link rel="stylesheet" href="dist/css/themes/modern.min.css">
-    <link rel="stylesheet" href="dist/css/themes/white.min.css">
-    <!-- Additional themes (based on the Radzen palette): -->
+    <link rel="stylesheet" href="dist/css/themes/white.min.css"> 
     <link rel="stylesheet" href="dist/css/themes/fluent.min.css">
     <link rel="stylesheet" href="dist/css/themes/material.min.css">
     <link rel="stylesheet" href="dist/css/themes/dark.min.css">
     <link rel="stylesheet" href="dist/css/themes/default.min.css">
-
+   
     <!-- Development only: -->
     <!--
     <link type="text/css" rel="stylesheet/less" href="src/css/winbox.less">
@@ -83,16 +83,16 @@
            (the styled bar is rendered on every window; add `no-scrollbar`
            to hide it). See the "Custom Scrollbars" example below. */
         .winbox.custom {
-            --wb-scrollbar-width:          thin;
+            --wb-scrollbar-width:          auto;
             --wb-scrollbar-color-thumb:    #94a3b8;
             --wb-scrollbar-color-track:    transparent;
             --wb-scrollbar-thumb:          #94a3b8;
             --wb-scrollbar-thumb-hover:    #cbd5e1;
             --wb-scrollbar-thumb-inactive: #64748a;
             --wb-scrollbar-thumb-radius:   10px;
-            --wb-scrollbar-thumb-border:   2px solid transparent;
-            --wb-scrollbar-track-bg:       transparent;
-            --wb-scrollbar-corner-bg:      transparent;
+            --wb-scrollbar-thumb-border:   1px solid transparent;
+            --wb-scrollbar-track:          transparent;
+            --wb-scrollbar-corner:         transparent;
         }
 
         /* WinBox Theme: "my-theme" */
@@ -446,6 +446,27 @@ new WinBox("Splitscreen (Right)", {
 
         <hr>
         <br>
+        Auto Resize (autosize)
+        <br><br>
+        <pre><code class="language-js">new WinBox("Auto Resize", {
+    autosize: true,
+    minwidth: 200,
+    minheight: 120,
+    maxwidth: 600,
+    maxheight: 400,
+    x: "center",
+    y: "center"
+});
+
+// pick a file count (1..100) — the window grows up to its max
+// and shrinks back down as the content changes
+win.body.innerHTML = "&lt;div&gt;file_1.txt&lt;/div>";</code></pre>
+        <div class="break"></div>
+        <div class="button" onclick="window.examples['autosize-resize']()">Run Code</div>
+        <br><br>
+
+        <hr>
+        <br>
         Control Programmatically
         <br><br>
         <pre><code class="language-html">&lt;div id="controls">
@@ -603,9 +624,11 @@ new WinBox("Splitscreen (Right)", {
 winbox.addClass("no-scrollbar");    // both axes
 ```</code></pre>
         <div class="break"></div>
-        <div class="button" onclick="window.examples['custom-css']()">Run Code</div>
-        <br>
-        <div class="button" onclick="window.examples['hide-scrollbar']()" style="background-color: #ca00b4">Hide Scrollbar Demo</div>
+        <div>
+            <div class="button" onclick="window.examples['custom-css']()">Run Code</div>
+            <div class="wb-icon"></div>
+            <div class="button" onclick="window.examples['hide-scrollbar']()" style="background-color: #ca00b4">Hide Scrollbar Demo</div>
+        </div> 
         <br><br>
 
         <hr>
@@ -773,7 +796,7 @@ new WinBox("Custom Template", { template });</code></pre>
         <button onclick="window.buttons['force_close']()">Force Close</button>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
 <script type="module">
 
     //import WinBox from "./src/js/winbox.js";
@@ -926,7 +949,7 @@ new WinBox("Custom Template", { template });</code></pre>
                     minwidth: 100,
                     maxheight: 300,
                     maxwidth: 500,
-                    autosize: true,
+                    autosize: false,
 
                     // position:
                     x: "center",
@@ -992,7 +1015,8 @@ new WinBox("Custom Template", { template });</code></pre>
                     height: 250,
                     class: "custom",
                     mount: document.getElementById("content")
-                                   .cloneNode(true)
+                                   .cloneNode(true),
+                    icon: "demo/browsers.svg"
                 });
             },
             "hide-scrollbar": function(){
@@ -1009,9 +1033,10 @@ new WinBox("Custom Template", { template });</code></pre>
 
                     width: 350,
                     height: 250,
-                    class: "modern no-scrollbar",
+                    class: "custom no-scrollbar",
                     mount: document.getElementById("content")
-                                   .cloneNode(true)
+                                   .cloneNode(true),
+                    icon: "demo/browsers.svg"
                 });
             },
             "custom-class": function(){
@@ -1073,8 +1098,8 @@ new WinBox("Custom Template", { template });</code></pre>
             "theme-selector": function(){
 
                 // read the theme the user picked (fluent / material / dark / default)
-                var input = document.querySelector("input[name='wb-theme']:checked");
-                var theme = input ? input.value : "fluent";
+                let input = document.querySelector("input[name='wb-theme']:checked");
+                let theme = input ? input.value : "fluent";
 
                 new WinBox("Theme: " + theme.charAt(0).toUpperCase() + theme.slice(1), {
 
@@ -1082,8 +1107,55 @@ new WinBox("Custom Template", { template });</code></pre>
                     // stylesheet is loaded once and the theme is applied via class
                     class: theme,
                     mount: document.getElementById("content")
-                                   .cloneNode(true)
+                                   .cloneNode(true),
+                    icon: "demo/browsers.svg"
                 });
+            },
+            "autosize-resize": function(){
+
+                const win = new WinBox("Auto Resize", {
+
+                    autosize: true,
+                    minwidth: 200,
+                    minheight: 120,
+                    maxwidth: 600,
+                    maxheight: 400,
+                    x: "center",
+                    y: "center"
+                });
+
+                // pick a file count (1..100) — the window grows up to its
+                // max and shrinks back down as the content changes
+                const select = document.createElement("select");
+                select.style.cssText = "margin:6px 8px;display:block";
+                select.innerHTML = "<option>1</option><option>5</option><option>10</option><option>25</option><option>50</option><option>100</option>";
+                select.value = "1";
+
+                const list = document.createElement("div");
+
+                win.body.appendChild(select);
+                win.body.appendChild(list);
+
+                function render(count){
+
+                    list.innerHTML = "";
+
+                    for(let i = 0; i < count; i++){
+
+                        const row = document.createElement("div");
+                        row.style.cssText = "padding:5px 10px; width:300px; box-sizing:border-box";
+                        row.textContent = "file_" + (i + 1) + ".txt";
+                        list.appendChild(row);
+                    }
+                }
+
+                // apply the selected count and let autosize react
+                select.onchange = function(){
+
+                    render(parseInt(this.value, 10) || 1);
+                };
+
+                render(parseInt(select.value, 10));
             },
             "controls": function(){
 

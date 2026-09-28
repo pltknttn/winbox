@@ -2,11 +2,33 @@
 // Scrollbar styling for `.wb-body`
 // -----------------------------------------------------------------------------
 // 
+
+.winbox {
+    // ---- scrollbar (variable-driven styling, see scrollbar.less) ----
+    // `size` is the scrollbar thickness for both axes: WebKit `width` (vertical/Y) and `height` (horizontal/X).
+    --wb-scrollbar-size:           12px;     
+    // WebKit thumb
+    --wb-scrollbar-thumb:          #888;
+    --wb-scrollbar-thumb-hover:    #666;
+    --wb-scrollbar-thumb-inactive: #777;
+    --wb-scrollbar-thumb-radius:   4px;
+    --wb-scrollbar-thumb-border:   1px solid transparent;     
+    // WebKit track / corner
+    --wb-scrollbar-track:       transparent;
+    --wb-scrollbar-corner:      transparent;     
+    // Firefox scrollbar-color (thumb / track)
+    --wb-scrollbar-color-track:    var(--wb-scrollbar-track, transparent);
+    --wb-scrollbar-color-thumb:    var(--wb-scrollbar-thumb, #888);
+    // Firefox: scrollbar-width ("thin"\"auto" = styled, "none" = hidden)
+    --wb-scrollbar-width:          auto;
+}
+
 .wb-body {
     & {
         /* Firefox and other modern browsers */
-        scrollbar-width: var(--wb-scrollbar-width, thin);
-        scrollbar-color: var(--wb-scrollbar-color-thumb, var(--wb-scrollbar-thumb, #888)) var(--wb-scrollbar-color-track, transparent);
+        scrollbar-width: var(--wb-scrollbar-width, auto);
+        /*-wb-scrollbar-color-thumb = ползунок, --wb-scrollbar-color-track = цвет полосы*/
+        scrollbar-color: var(--wb-scrollbar-color-thumb, var(--wb-scrollbar-thumb, #888)) var(--wb-scrollbar-color-track, var(--wb-scrollbar-track, transparent));
     }
     /* Chrome, Edge, Safari and other WebKit/Blink browsers */
     &::-webkit-scrollbar {
@@ -16,12 +38,12 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: var(--wb-scrollbar-track-bg, transparent);
+        background: var(--wb-scrollbar-track, transparent);
     }
 
     &::-webkit-scrollbar-thumb {
-        border:        var(--wb-scrollbar-thumb-border, 2px solid transparent);
-        border-radius: var(--wb-scrollbar-thumb-radius, 10px);
+        border:        var(--wb-scrollbar-thumb-border, 1px solid transparent);
+        border-radius: var(--wb-scrollbar-thumb-radius, 4px);
         background:    var(--wb-scrollbar-thumb, #263040);
     }
 
@@ -34,7 +56,7 @@
     }
 
     &::-webkit-scrollbar-corner {
-        background: var(--wb-scrollbar-corner-bg, transparent);
+        background: var(--wb-scrollbar-corner, transparent);
     }
 } 
 
@@ -49,6 +71,12 @@
             display: none !important; /* Blink / Edge / modern-Safari */
             width: 0 !important; /* legacy-Safari fallback (beats a themed width) */
             height: 0 !important; /* legacy-Safari fallback (beats a themed height) */
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border:        none;
+            border-radius: 0;
+            background:    transparent;
         }
     }
 }
