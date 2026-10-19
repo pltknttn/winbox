@@ -1,5 +1,16 @@
 ## v0.2.9
 
+-  `setIcon()` (and the `icon` option) now accept an object in addition to a
+   plain image url: `{ IconType: "Url" | "Class" | "Html", Source, Id, IconStyle }`.
+   A plain string keeps working as shortcut for the type "Url".
+-  fix: `close()` removed the last window of the stack when the closed window
+   was not registered (index `-1`).
+-  fix: `minwidth` / `minheight` are now respected on construction and on
+   `resize()` (the internal size state now matches the rendered size).
+-  fix: `setUrl()` creates the iframe via DOM instead of markup (no HTML
+   injection through the url).
+-  fix: `mount(null)`, `addControl()` on a custom template without toolbar and
+   `fullscreen()` without fullscreen support do not throw anymore.
 -  update dependencies
 -  add optional, variable-driven scrollbar styling via the `wb-scrollbar`
    control class and the `--wb-scrollbar-*` custom properties (Firefox

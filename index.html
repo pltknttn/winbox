@@ -125,6 +125,30 @@
             background-image: url(demo/heart-filled.svg) !important;
         }
 
+        /* WinBox Icon Types (Class / Url / Html) */
+
+        .wb-icon-star {
+            background-image: url(demo/wikipedia.svg);
+            background-size: 17px auto;
+        }
+        .wb-icon-emoji {
+            font-size: 15px;
+            line-height: 1;
+            color: #ffcc00;
+        }
+
+        /* Demo Groups */
+
+        .group {
+            margin: 34px 0 4px;
+            padding: 10px 14px;
+            border-left: 4px solid #0050ff;
+            border-radius: 8px;
+            background: #141a24;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
     </style>
     <link rel="stylesheet" href="demo/style.css">
     <meta name="format-detection" content="telephone=no">
@@ -184,6 +208,8 @@
 
         <hr>
         <br>
+        <h3 class="group">Basics</h3>
+        <br>
         Basic Window
         <br><br>
         <pre><code class="language-js">new WinBox("Basic Window");</code></pre>
@@ -228,6 +254,8 @@
 
         <hr>
         <br>
+        <h3 class="group">Appearance</h3>
+        <br>
         Custom Icon (Titlebar)
         <br><br>
         <pre><code class="language-js">new WinBox({
@@ -237,6 +265,47 @@
 });</code></pre>
         <div class="break"></div>
         <div class="button" onclick="window.examples['icon']()">Run Code</div>
+        <br><br>
+
+        <hr>
+        <br>
+        Icon Types (Url, Class, Html)
+        <br><br>
+        <div style="color: #79c0ff; line-height: 22px;">
+            The <code>icon</code> option and <code>setIcon()</code> accept a plain image URL
+            (shortcut for the type <code>"Url"</code>) or an object of the shape:<br>
+            <code>{ IconType: "Url" | "Class" | "Html", Source: ..., Id: ..., IconStyle: {...} }</code>
+        </div>
+        <pre><code class="language-js">// Url
+new WinBox({
+    title: "Icon: Url",
+    icon: {
+        IconType: "Url",
+        Source: "demo/wikipedia.svg",
+        IconStyle: { "background-size": "17px auto" }
+    }
+});
+
+// Class
+new WinBox({
+    title: "Icon: Class",
+    icon: {
+        IconType: "Class",
+        Source: "wb-icon-star",
+        Id: "my-icon"
+    }
+});
+
+// Html
+new WinBox({
+    title: "Icon: Html",
+    icon: {
+        IconType: "Html",
+        Source: "&lt;span class='wb-icon-emoji'&gt;★&lt;/span&gt;"
+    }
+});</code></pre>
+        <div class="break"></div>
+        <div class="button" onclick="window.examples['icon-types']()">Run Code</div>
         <br><br>
 
         <hr>
@@ -254,6 +323,8 @@
         <br><br>
 
         <hr>
+        <br>
+        <h3 class="group">Layout &amp; Position</h3>
         <br>
         Splitscreen
         <br><br>
@@ -297,6 +368,8 @@ new WinBox("Splitscreen (Right)", {
         <br><br>
 
         <hr>
+        <br>
+        <h3 class="group">Content</h3>
         <br>
         Set innerHTML
         <br><br>
@@ -353,6 +426,8 @@ new WinBox("Splitscreen (Right)", {
         <br><br>
 
         <hr>
+        <br>
+        <h3 class="group">Options &amp; State</h3>
         <br>
         All Options
         <br><br>
@@ -467,6 +542,8 @@ win.body.innerHTML = "&lt;div&gt;file_1.txt&lt;/div>";</code></pre>
 
         <hr>
         <br>
+        <h3 class="group">Controls</h3>
+        <br>
         Control Programmatically
         <br><br>
         <pre><code class="language-html">&lt;div id="controls">
@@ -545,6 +622,8 @@ win.body.innerHTML = "&lt;div&gt;file_1.txt&lt;/div>";</code></pre>
         <img src="demo/boilerplate.svg" width="100%" alt="WinBox Boilerplate">
 
         <hr>
+        <br>
+        <h3 class="group">Styling &amp; Themes</h3>
         <br>
         Custom Styles (Global)
         <br><br>
@@ -843,6 +922,54 @@ new WinBox("Custom Template", { template });</code></pre>
                     title: "Custom Icon",
                     icon: "demo/wikipedia.svg",
                     background: "#252b4e"
+                });
+            },
+
+            "icon-types": function(){
+
+                // the same icon definition can be passed as a plain string
+                // (shortcut for the "Url" type) or as an object
+                const icons = [
+
+                    {
+                        "IconType": "Url",
+                        "Source": "demo/wikipedia.svg",
+                        "IconStyle": { "background-size": "17px auto" }
+                    },
+                    {
+                        "IconType": "Class",
+                        "Source": "wb-icon-star",
+                        "Id": "my-icon"
+                    },
+                    {
+                        "IconType": "Html",
+                        "Source": "<span class='wb-icon-emoji'>★</span>"
+                    }
+                ];
+
+                const titles = ["Icon: Url", "Icon: Class", "Icon: Html"];
+
+                icons.forEach(function(icon, index){
+
+                    const win = new WinBox({
+
+                        title: titles[index],
+                        width: 320,
+                        height: 160,
+                        x: "center",
+                        y: "center",
+                        icon: icon
+                    });
+
+                    // the icon can be changed at any time via setIcon()
+                    const button = document.createElement("button");
+                    button.textContent = "Switch Icon";
+                    button.onclick = function(){
+
+                        win.setIcon(icons[(index + 1) % icons.length]);
+                    };
+
+                    win.body.appendChild(button);
                 });
             },
 

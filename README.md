@@ -88,7 +88,7 @@ Instance member methods:
 - <a href="#winbox.unmount">winbox.**unmount**(dest)</a>
 - <a href="#winbox.setUrl">winbox.**setUrl**(string)</a>
 - <a href="#winbox.setTitle">winbox.**setTitle**(string)</a>
-- <a href="#winbox.setIcon">winbox.**setIcon**(url)</a>
+- <a href="#winbox.setIcon">winbox.**setIcon**(url|object)</a>
 - <a href="#winbox.move">winbox.**move**(x, y)</a>
 - <a href="#winbox.resize">winbox.**resize**(width, height)</a>
 - <a href="#winbox.close">winbox.**close**(boolean)</a>
@@ -279,8 +279,8 @@ Callback methods:
     <tr></tr>
     <tr>
         <td>icon</td>
-        <td>string</td>
-        <td>Make the titlebar icon visible and set the image source to this url.</td>
+        <td>string|object</td>
+        <td>Make the titlebar icon visible and set its source.<br><br>A plain string is the image url (shortcut for the type <code>"Url"</code>). Alternatively an object of the shape <code>{ IconType: "Url" | "Class" | "Html", Source: string|string[], Id: string, IconStyle: object }</code> can be used: <code>"Url"</code> sets the image source, <code>"Class"</code> applies one or more classnames to the icon element, <code>"Html"</code> inserts a HTML string into the icon element. <code>Id</code> sets the id of the icon element, <code>IconStyle</code> applies inline styles to the icon element.</td>
     </tr>
     <tr></tr>
     <tr>
@@ -453,6 +453,58 @@ Alternatively:
 var winbox = new WinBox("Custom Icon");
 winbox.setIcon("img/icon.svg");
 ```
+
+##### Icon Types
+
+Instead of a plain url the icon can be defined as an object. This allows to use
+a classname or arbitrary HTML markup as icon:
+
+```js
+// type: "Url" (default) - the source is an image url
+new WinBox({
+    title: "Icon: Url",
+    icon: {
+        IconType: "Url",
+        Source: "img/icon.svg",
+        IconStyle: { "background-size": "17px auto" }
+    }
+});
+
+// type: "Class" - the source is one or more classnames
+new WinBox({
+    title: "Icon: Class",
+    icon: {
+        IconType: "Class",
+        Source: "wb-icon-star",
+        Id: "my-icon"
+    }
+});
+
+// type: "Html" - the source is a HTML string
+new WinBox({
+    title: "Icon: Html",
+    icon: {
+        IconType: "Html",
+        Source: "<span class='wb-icon-emoji'>*</span>"
+    }
+});
+```
+
+The same definition can be passed to `setIcon()` at any time:
+
+```js
+winbox.setIcon({
+    IconType: "Html",
+    Source: "<span class='wb-icon-emoji'>*</span>"
+});
+```
+
+| Property | Type | Description |
+| --- | --- | --- |
+| IconType | string | The type of the icon: "Url", "Class" or "Html" (default: "Url"). |
+| Source | string\|string[] | The image url, the classname(s) or the HTML markup. |
+| Id | string | The id of the icon element. |
+| IconStyle | object | Inline styles applied to the icon element, e.g. `{ "background-size": "17px auto" }`. |
 
 See below in the style section to find out how to easily customize the titlebar icon style via css.
 

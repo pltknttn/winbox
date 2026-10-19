@@ -244,6 +244,9 @@ function WinBox(params, _title){
 
         width = width ? parse(width, maxwidth) : Math.max(maxwidth / 2, minwidth) | 0;
         height = height ? parse(height, maxheight) : Math.max(maxheight / 2, minheight) | 0;
+
+        width = Math.max(width, minwidth);
+        height = Math.max(height, minheight);
     }
 
     x = x ? parse(x, viewport_w, width) : left;
@@ -496,7 +499,10 @@ function register(self){
 
 function remove_min_stack(self){
 
-    stack_min.splice(stack_min.indexOf(self), 1);
+    const index = stack_min.indexOf(self);
+
+    index > -1 && stack_min.splice(index, 1);
+
     update_min_stack();
     self.removeClass("min");
     self.min = false;
@@ -829,6 +835,11 @@ function init(){
 
 WinBox.prototype.mount = function(src){
 
+    if(!src){
+
+        return this;
+    }
+
     // handles mounting over:
     this.unmount();
 
@@ -871,14 +882,188 @@ WinBox.prototype.setTitle = function(title){
 };
 
 /**
+ * Icon types supported by {@link WinBox#setIcon}.
+ *
+ *  - "Url":  the source is a URL of an image (default)
+ *  - "Class": the source is a classname (or an array of classnames) applied to the icon node
+ *  - "Html":  the source is a HTML string inserted into the icon node
+ */
+
+const ICON_TYPE = {
+    "url": "url",
+    "class": "class",
+    "html": "html"
+};
+
+/**
+ * Reads the first defined value of the given keys.
+ *
+ * @param {Object} obj
+ * @param {string[]} keys
+ * @return {*}
+ */
+
+function pick(obj, keys){
+
+    for(let i = 0; i < keys.length; i++){
+
+        const value = obj[keys[i]];
+
+        if(value !== undefined && value !== null){
+
+            return value;
+        }
+    }
+
+    return undefined;
+}
+
+/**
+ * Resets the icon node to its initial state (no source, no custom class, no id).
+ *
+ * @param {Element} node
+ * @param {WinBox} self
+ */
+
+function clear_icon(node, self){
+
+    // remove classnames added by a previous icon
+    const classes = self._iconClasses || [];
+
+    for(let i = 0; i < classes.length; i++){
+
+        removeClass(node, classes[i]);
+    }
+
+    self._iconClasses = [];
+
+    // reset the inline styles applied by a previous icon
+    const styles = self._iconStyleKeys || [];
+
+    for(let i = 0; i < styles.length; i++){
+
+        setStyle(node, styles[i], "");
+    }
+
+    self._iconStyleKeys = [];
+
+    // reset the image (remove the inline value so a css class can provide it)
+    setStyle(node, "background-image", "");
+    delete node["_s_background-image"];
+
+    // reset inline markup
+    node.innerHTML = "";
+
+    // reset the id
+    if(self._iconId !== undefined && node.id === self._iconId){
+
+        node.removeAttribute("id");
+        node["_a_id"] = null;
+    }
+
+    self._iconId = undefined;
+
+    setStyle(node, "display", "none");
+}
+
+/**
+ * Sets the titlebar icon of the window.
+ *
+ * The source can either be a plain string (shortcut for the "Url" type) or an
+ * object of the shape:
+ *
+ *   {
+ *     IconType: "Url" | "Class" | "Html",
+ *     Source:   string | string[],
+ *     Id:       string,
+ *     IconStyle:{ cssProperty: value }
+ *   }
+ *
+ * @param {string|Object} src
  * @this WinBox
  */
 
 WinBox.prototype.setIcon = function(src){
 
-    const img = getByClass(this.dom, "wb-icon");
-    setStyle(img, "background-image", "url(" + src + ")");
-    setStyle(img, "display", "inline-block");
+    const node = getByClass(this.dom, "wb-icon");
+
+    if(!node){
+
+        return this;
+    }
+
+    clear_icon(node, this);
+
+    if(typeof src === "string"){
+
+        src = { "IconType": "Url", "Source": src };
+    }
+    else if(!src || typeof src !== "object"){
+
+        return this;
+    }
+    else{
+
+        src = {
+            "IconType": pick(src, ["IconType", "iconType", "type"]),
+            "Source": pick(src, ["Source", "source"]),
+            "Id": pick(src, ["Id", "id"]),
+            "IconStyle": pick(src, ["IconStyle", "iconStyle", "style"])
+        };
+    }
+
+    const type = String(src["IconType"] || "Url").toLowerCase();
+    const source = src["Source"];
+
+    if(source !== undefined && source !== null && source !== ""){
+
+        if(type === ICON_TYPE["class"]){
+
+            const classes = Array.isArray(source) ? source : String(source).split(/\s+/);
+
+            for(let i = 0; i < classes.length; i++){
+
+                const classname = String(classes[i]).trim();
+
+                if(classname && classname !== "wb-icon"){
+
+                    addClass(node, classname);
+                    this._iconClasses.push(classname);
+                }
+            }
+
+            setStyle(node, "display", "inline-block");
+        }
+        else if(type === ICON_TYPE["html"]){
+
+            node.innerHTML = source;
+            setStyle(node, "display", "inline-block");
+        }
+        else{
+
+            setStyle(node, "background-image", "url(" + source + ")");
+            setStyle(node, "display", "inline-block");
+        }
+    }
+
+    if(src["Id"] !== undefined && src["Id"] !== null && src["Id"] !== ""){
+
+        node.id = src["Id"];
+        this._iconId = src["Id"];
+    }
+
+    const style = src["IconStyle"];
+
+    if(style && typeof style === "object"){
+
+        const keys = Object.keys(style);
+
+        for(let i = 0; i < keys.length; i++){
+
+            setStyle(node, keys[i], style[keys[i]]);
+            this._iconStyleKeys.push(keys[i]);
+        }
+    }
 
     return this;
 };
@@ -907,8 +1092,14 @@ WinBox.prototype.setUrl = function(url, onload){
     }
     else{
 
-        this.body.innerHTML = '<iframe src="' + url + '"></iframe>';
-        onload && (this.body.firstChild.onload = onload);
+        // build the iframe via DOM instead of markup to avoid HTML injection
+        const iframe = document.createElement("iframe");
+
+        iframe.src = url;
+        onload && (iframe.onload = onload);
+
+        this.body.textContent = "";
+        this.body.appendChild(iframe);
     }
 
     return this;
@@ -1169,6 +1360,11 @@ WinBox.prototype.fullscreen = function(state){
 
     if(!is_fullscreen || !cancel_fullscreen()){
 
+        if(!prefix_request){
+
+            return this;
+        }
+
         // requestFullscreen is executed as async and returns promise.
         // in this case it is better to set the state to "this.full" after the requestFullscreen was fired,
         // because it may break when browser does not support fullscreen properly and bypass it silently.
@@ -1235,7 +1431,9 @@ WinBox.prototype.close = function(force) {
         remove_min_stack(this);
     }
 
-    stack_win.splice(stack_win.indexOf(this), 1);
+    const index = stack_win.indexOf(this);
+
+    index > -1 && stack_win.splice(index, 1);
 
     this.unmount();
     this.dom.remove();
@@ -1301,11 +1499,14 @@ WinBox.prototype.resize = function(w, h, _skip_update){
     }
     else if(!_skip_update){
 
-        this.width = w ? w = parse(w, this.maxwidth /*- this.left - this.right*/) : 0;
-        this.height = h ? h = parse(h, this.maxheight /*- this.top - this.bottom*/) : 0;
+        // the applied size is always the clamped one - the internal state has
+        // to match what is really rendered, otherwise the autosize logic
+        // compares against wrong values
+        w = Math.max(w ? w = parse(w, this.maxwidth /*- this.left - this.right*/) : 0, this.minwidth);
+        h = Math.max(h ? h = parse(h, this.maxheight /*- this.top - this.bottom*/) : 0, this.minheight);
 
-        w = Math.max(w, this.minwidth);
-        h = Math.max(h, this.minheight);
+        this.width = w;
+        this.height = h;
     }
 
     setStyle(this.dom, "width", w + "px");
@@ -1572,6 +1773,11 @@ WinBox.prototype.addControl = function (control) {
     const node = document.createElement("span");
     const icons = getByClass(this.dom, "wb-control");
     const self = this;
+
+    if(!icons){
+
+        return this;
+    }
 
     if (classname) node.className = classname;
     if (image) setStyle(node, "background-image", "url(" + image + ")");
