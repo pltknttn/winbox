@@ -1215,8 +1215,10 @@ WinBox.prototype.hide = function(state){
 
         this.onhide && this.onhide();
         this.hidden = true;
-        return this.addClass("hide");
+        this.addClass("hide");
     }
+
+    return this;
 };
 
 /**
@@ -1235,8 +1237,10 @@ WinBox.prototype.show = function(state){
 
         this.onshow && this.onshow();
         this.hidden = false;
-        return this.removeClass("hide");
+        this.removeClass("hide");
     }
+
+    return this;
 };
 
 /**

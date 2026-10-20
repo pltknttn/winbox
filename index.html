@@ -127,8 +127,8 @@
 
         /* WinBox Icon Types (Class / Url / Html) */
 
-        .wb-icon-star {
-            background-image: url(demo/wikipedia.svg);
+        .wb-icon-brand {
+            background-image: url(demo/browsers.svg);
             background-size: 17px auto;
         }
         .wb-icon-emoji {
@@ -201,7 +201,6 @@
         <br><br>
         <pre><code class="language-js">WinBox(title, options&lt;key: value>)</code></pre>
         <br>
-
         <hr>
         <br>
         <div style="color: #79c0ff; line-height: 22px;">You can open the browser dev tools and copy and paste the js-code blocks into the console and play with them.</div>
@@ -216,7 +215,6 @@
         <div class="break"></div>
         <div class="button" onclick="window.examples['basic']()">Run Code</div>
         <br><br>
-
         <hr>
         <br>
         Custom Root
@@ -227,7 +225,6 @@
         <div class="break"></div>
         <div class="button" onclick="window.examples['root']()">Run Code</div>
         <br><br>
-
         <hr>
         <br>
         Custom Border
@@ -238,12 +235,12 @@
         <div class="break"></div>
         <div class="button" onclick="window.examples['border']()">Run Code</div>
         <br><br>
-
         <hr>
         <br>
         Custom Color
         <br><br>
-        <pre><code class="language-js">new WinBox({
+        <pre>
+            <code class="language-js">new WinBox({
     title: "Custom Color",
     background: "#ff005d",
     border: 4
@@ -251,7 +248,6 @@
         <div class="break"></div>
         <div class="button" onclick="window.examples['color']()">Run Code</div>
         <br><br>
-
         <hr>
         <br>
         <h3 class="group">Appearance</h3>
@@ -266,15 +262,13 @@
         <div class="break"></div>
         <div class="button" onclick="window.examples['icon']()">Run Code</div>
         <br><br>
-
         <hr>
         <br>
-        Icon Types (Url, Class, Html)
+        Icon Types (Url, Class, HTML)
         <br><br>
         <div style="color: #79c0ff; line-height: 22px;">
             The <code>icon</code> option and <code>setIcon()</code> accept a plain image URL
-            (shortcut for the type <code>"Url"</code>) or an object of the shape:<br>
-            <code>{ IconType: "Url" | "Class" | "Html", Source: ..., Id: ..., IconStyle: {...} }</code>
+            (shortcut for the type <code>"Url"</code>) or an object of the shape:<br> 
         </div>
         <pre><code class="language-js">// Url
 new WinBox({
@@ -291,7 +285,7 @@ new WinBox({
     title: "Icon: Class",
     icon: {
         IconType: "Class",
-        Source: "wb-icon-star",
+        Source: "wb-icon-brand",
         Id: "my-icon"
     }
 });
@@ -966,7 +960,7 @@ new WinBox("Custom Template", { template });</code></pre>
                     },
                     {
                         "IconType": "Class",
-                        "Source": "wb-icon-star",
+                        "Source": "wb-icon-brand",
                         "Id": "my-icon"
                     },
                     {
@@ -984,17 +978,22 @@ new WinBox("Custom Template", { template });</code></pre>
                         title: titles[index],
                         width: 320,
                         height: 160,
-                        x: "center",
-                        y: "center",
+                        // cascade the windows so every type stays visible/clickable
+                        x: 60 + index * 200,
+                        y: 90 + index * 60,
                         icon: icon
                     });
 
-                    // the icon can be changed at any time via setIcon()
+                    // the icon can be changed at any time via setIcon();
+                    // keep a mutable cursor so repeated clicks cycle through all icons
+                    let current = index;
+
                     const button = document.createElement("button");
                     button.textContent = "Switch Icon";
                     button.onclick = function(){
 
-                        win.setIcon(icons[(index + 1) % icons.length]);
+                        current = (current + 1) % icons.length;
+                        win.setIcon(icons[current]).setTitle(titles[current]);
                     };
 
                     win.body.appendChild(button);

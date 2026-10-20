@@ -1,8 +1,15 @@
-## v0.3.0
+## v0.3.1
 
+-  update dependencies (Babel 8).
+-  fix: `hide()` / `show()` now return the instance so they can be chained.
+-  fix: the "Icon Types" demo now cycles through every icon on repeated clicks
+   of "Switch Icon" (the cursor is no longer reset to the next item).
 -  `setIcon()` (and the `icon` option) now accept an object in addition to a
    plain image url: `{ IconType: "Url" | "Class" | "Html", Source, Id, IconStyle }`.
    A plain string keeps working as shortcut for the type "Url".
+
+## v0.3.0
+
 -  update dependencies
 
 ## v0.2.9

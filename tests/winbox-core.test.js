@@ -209,4 +209,28 @@ describe("WinBox core", () => {
             expect(node.style.display).toBe("inline-block");
         });
     });
+
+    describe("hide() / show()", () => {
+
+        test("hide() and show() return the instance (chaining)", () => {
+
+            const win = make();
+
+            expect(win.hide()).toBe(win);
+            expect(win.hide()).toBe(win);
+            expect(win.show()).toBe(win);
+            expect(win.show()).toBe(win);
+        });
+
+        test("hide() / show() toggle the hidden state and class", () => {
+
+            const win = make();
+
+            expect(win.hide().hidden).toBe(true);
+            expect(win.hasClass("hide")).toBe(true);
+
+            expect(win.show().hidden).toBe(false);
+            expect(win.hasClass("hide")).toBe(false);
+        });
+    });
 });
