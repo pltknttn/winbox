@@ -172,6 +172,7 @@ function WinBox(params, _title){
     //this.plugins = [];
     this._iconClasses = [];
     this._iconStyleKeys = [];
+    this._iconId = undefined;
 
     stack_win.push(this);
 
@@ -983,6 +984,13 @@ WinBox.prototype.setIconUrl = function(src){
         return this;
     }
     
+    clear_icon(img, this);
+
+    if(!src || typeof src !== "string"){
+
+        return this;
+    }
+    
     setStyle(img, "background-image", "url(" + src + ")");
     setStyle(img, "display", "inline-block");
 
@@ -1007,17 +1015,6 @@ WinBox.prototype.setIconUrl = function(src){
  */
 
 WinBox.prototype.setIcon = function(src){
-    
-    if(typeof src === "string"){
-
-        this.setIconUrl(src);
-        return this;
-    }
-
-    if(!src || typeof src !== "object"){
-
-        return this;
-    }
 
     const node = getByClass(this.dom, "wb-icon");
 
@@ -1028,12 +1025,22 @@ WinBox.prototype.setIcon = function(src){
 
     clear_icon(node, this);
     
-    src = { 
-        "IconType": pick(src, ["IconType", "iconType", "type"]),
-        "Source": pick(src, ["Source", "source"]),
-        "Id": pick(src, ["Id", "id"]),
-        "IconStyle": pick(src, ["IconStyle", "iconStyle", "style"])
-    }; 
+    if(typeof src === "string"){
+
+        src = { "IconType": "Url", "Source": src };
+    }
+    else if(!src || typeof src !== "object"){
+
+        return this;        
+    } else {
+
+        src = {
+            "IconType": pick(src, ["IconType", "iconType", "type"]),
+            "Source": pick(src, ["Source", "source"]),
+            "Id": pick(src, ["Id", "id"]),
+            "IconStyle": pick(src, ["IconStyle", "iconStyle", "style"])
+        };
+    }
 
     const type = String(src["IconType"] || "Url").toLowerCase();
     const source = src["Source"];
