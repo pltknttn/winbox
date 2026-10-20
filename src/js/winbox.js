@@ -321,6 +321,13 @@ function WinBox(params, _title){
     (root || body).appendChild(this.dom);
     oncreate && oncreate.call(this, params);
 
+    // the icon can be set (or changed) within the oncreate callback -
+    // the options passed to the callback are the ones of this instance
+    if(params && (params["icon"] !== undefined) && (params["icon"] !== icon)){
+
+        this.setIcon(params["icon"]);
+    }
+
     if(autosize){
 
         this._startAutosize();

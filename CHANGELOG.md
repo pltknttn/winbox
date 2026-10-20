@@ -3,6 +3,8 @@
 -  `setIcon()` (and the `icon` option) now accept an object in addition to a
    plain image url: `{ IconType: "Url" | "Class" | "Html", Source, Id, IconStyle }`.
    A plain string keeps working as shortcut for the type "Url".
+-  fix: an `icon` set within the `oncreate` callback is applied now (it was
+   ignored before, because the icon was applied before the callback was fired).
 -  fix: `close()` removed the last window of the stack when the closed window
    was not registered (index `-1`).
 -  fix: `minwidth` / `minheight` are now respected on construction and on
@@ -11,6 +13,9 @@
    injection through the url).
 -  fix: `mount(null)`, `addControl()` on a custom template without toolbar and
    `fullscreen()` without fullscreen support do not throw anymore.
+-  fix: the demo page code blocks now match the running examples (theme
+   selector, custom controls, controls) and the leftover empty `.wb-icon`
+   element was removed.
 -  update dependencies
 -  add optional, variable-driven scrollbar styling via the `wb-scrollbar`
    control class and the `--wb-scrollbar-*` custom properties (Firefox

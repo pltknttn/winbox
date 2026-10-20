@@ -547,17 +547,22 @@ win.body.innerHTML = "&lt;div&gt;file_1.txt&lt;/div>";</code></pre>
         Control Programmatically
         <br><br>
         <pre><code class="language-html">&lt;div id="controls">
-    &lt;button onclick="buttons.minimize()">Minimize (Toggle)&lt;/button>
-    &lt;button onclick="buttons.maximize()">Maximize (Toggle)&lt;/button>
-    &lt;button onclick="buttons.fullscreen()">Fullscreen (Toggle)&lt;/button>
-    &lt;button onclick="buttons.move()">Move (Center, Center)&lt;/button>
-    &lt;button onclick="buttons.resize()">Resize (50%, 50%)&lt;/button>
-    &lt;button onclick="buttons.title()">Set Title&lt;/button>
-    &lt;button onclick="buttons.color()">Set Color&lt;/button>
-    &lt;button onclick="buttons.close()">Close&lt;/button>
+    &lt;button onclick="window.buttons['minimize']()">Minimize (Toggle)&lt;/button>
+    &lt;button onclick="window.buttons['maximize']()">Maximize (Toggle)&lt;/button>
+    &lt;button onclick="window.buttons['fullscreen']()">Fullscreen (Toggle)&lt;/button>
+    &lt;button onclick="window.buttons['modal']()">Modal (Toggle)&lt;/button>
+    &lt;button onclick="window.buttons['center']()">Move (Center, Center)&lt;/button>
+    &lt;button onclick="window.buttons['move']()">Move (Right, Bottom)&lt;/button>
+    &lt;button onclick="window.buttons['resize']()">Resize (50%, 50%)&lt;/button>
+    &lt;button onclick="window.buttons['title']()">Set Title&lt;/button>
+    &lt;button onclick="window.buttons['color']()">Set Color&lt;/button>
+    &lt;button onclick="window.buttons['add']()">Add Class (my-theme)&lt;/button>
+    &lt;button onclick="window.buttons['remove']()">Remove Class (my-theme)&lt;/button>
+    &lt;button onclick="window.buttons['close']()">Close&lt;/button>
+    &lt;button onclick="window.buttons['force_close']()">Force Close&lt;/button>
 &lt;/div></code></pre>
     <div class="break"></div>
-    <pre><code class="language-js">var winbox = new WinBox("Controls", {
+    <pre><code class="language-js">const winbox = new WinBox("Controls", {
     mount: document.getElementById("controls"),
     border: 4,
     onclose: function(force){
@@ -568,19 +573,27 @@ win.body.innerHTML = "&lt;div&gt;file_1.txt&lt;/div>";</code></pre>
         <pre><code class="language-js">window.buttons = {
     minimize: function(){
 
-        winbox.minimize(!this.min);
+        winbox.minimize(!winbox.min);
     },
     maximize: function(){
 
-        winbox.maximize(!this.max);
+        winbox.maximize(!winbox.max);
     },
     fullscreen: function(){
 
-        winbox.fullscreen(!this.full);
+        winbox.fullscreen(!winbox.full);
+    },
+    modal: function(){
+
+        winbox.toggleClass("modal");
+    },
+    center: function(){
+
+        winbox.move("center", "center");
     },
     move: function(){
 
-        winbox.move("center", "center");
+        winbox.move("right", "bottom");
     },
     resize: function(){
 
@@ -598,9 +611,13 @@ win.body.innerHTML = "&lt;div&gt;file_1.txt&lt;/div>";</code></pre>
                      (Math.random() * 255 | 0) + ")"
         );
     },
-    modal: function(){
+    add: function(){
 
-        winbox.toggleClass("modal");
+        winbox.addClass("my-theme");
+    },
+    remove: function(){
+
+        winbox.removeClass("my-theme");
     },
     close: function(){
 
@@ -705,7 +722,6 @@ winbox.addClass("no-scrollbar");    // both axes
         <div class="break"></div>
         <div>
             <div class="button" onclick="window.examples['custom-css']()">Run Code</div>
-            <div class="wb-icon"></div>
             <div class="button" onclick="window.examples['hide-scrollbar']()" style="background-color: #ca00b4">Hide Scrollbar Demo</div>
         </div> 
         <br><br>
@@ -785,10 +801,15 @@ winbox.addClass("no-scrollbar");    // both axes
             <label><input type="radio" name="wb-theme" value="white"> white</label>
         </div>
         <br>
-        <pre><code class="language-js">new WinBox("Theme: " + theme, {
+        <pre><code class="language-js">// read the theme the user picked (fluent / material / dark / default / white)
+const input = document.querySelector("input[name='wb-theme']:checked");
+const theme = input ? input.value : "fluent";
+
+new WinBox("Theme: " + theme.charAt(0).toUpperCase() + theme.slice(1), {
     class: theme,
     mount: document.getElementById("content")
-                   .cloneNode(true)
+                   .cloneNode(true),
+    icon: "demo/browsers.svg"
 });</code></pre>
         <div class="break"></div>
         <div class="button" onclick="window.examples['theme-selector']()" style="background-color: #0078d4">Show Example</div>
@@ -805,12 +826,19 @@ winbox.addClass("no-scrollbar");    // both axes
     background-image: url(demo/heart-filled.svg) !important;
 }</code></pre>
         <div class="break"></div>
-        <pre><code class="language-js">const winbox = new WinBox("Custom Controls");
+        <pre><code class="language-js">const winbox = new WinBox("Custom Controls", {
+    class: "no-full",
+    background: "#313646"
+});
 winbox.removeControl("wb-max").removeControl("wb-min");
 winbox.addControl({
+    // the position index
     index: 0,
+    // classname to apply styling
     class: "wb-like",
+    // icon url when not specified via classname
     image: "demo/heart.svg",
+    // click listener
     click: function(event, winbox){
         // the winbox instance will be passed as 2nd parameter
         console.log(winbox.id);

@@ -120,7 +120,6 @@ describe("WinBox core", () => {
     });
 
     describe("robustness", () => {
-
         test("mount(null) does not throw", () => {
 
             const win = make();
@@ -150,6 +149,64 @@ describe("WinBox core", () => {
             const win = make();
 
             expect(() => win.fullscreen()).not.toThrow();
+        });
+    });
+
+    describe("oncreate", () => {
+
+        test("an icon set within oncreate is applied", () => {
+
+            const win = make({
+                "icon": false,
+                "oncreate": function(options){
+                    options.icon = "demo/wikipedia.svg";
+                }
+            });
+
+            const node = win.dom.getElementsByClassName("wb-icon")[0];
+
+            expect(node.style.backgroundImage).toContain("demo/wikipedia.svg");
+            expect(node.style.display).toBe("inline-block");
+        });
+
+        test("an icon set within oncreate can be an icon object", () => {
+
+            const win = make({
+                "icon": false,
+                "oncreate": function(options){
+                    options.icon = {
+                        "IconType": "Class",
+                        "Source": "wb-icon-star"
+                    };
+                }
+            });
+
+            const node = win.dom.getElementsByClassName("wb-icon")[0];
+
+            expect(node.classList.contains("wb-icon-star")).toBe(true);
+        });
+
+        test("an icon set within oncreate is applied when no icon option was given", () => {
+
+            const win = make({
+                "oncreate": function(options){
+                    options.icon = "demo/wikipedia.svg";
+                }
+            });
+
+            const node = win.dom.getElementsByClassName("wb-icon")[0];
+
+            expect(node.style.backgroundImage).toContain("demo/wikipedia.svg");
+        });
+
+        test("an existing icon is not applied twice", () => {
+
+            const win = make({ "icon": "demo/wikipedia.svg" });
+
+            const node = win.dom.getElementsByClassName("wb-icon")[0];
+
+            expect(node.style.backgroundImage).toContain("demo/wikipedia.svg");
+            expect(node.style.display).toBe("inline-block");
         });
     });
 });
