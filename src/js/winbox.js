@@ -170,6 +170,8 @@ function WinBox(params, _title){
     this.body = getByClass(this.dom, "wb-body");
     this.header = header || 35;
     //this.plugins = [];
+    this._iconClasses = [];
+    this._iconStyleKeys = [];
 
     stack_win.push(this);
 
@@ -893,7 +895,7 @@ WinBox.prototype.setTitle = function(title){
  *
  *  - "Url":  the source is a URL of an image (default)
  *  - "Class": the source is a classname (or an array of classnames) applied to the icon node
- *  - "Html":  the source is a HTML string inserted into the icon node
+ *  - "Html":  the source is an HTML string inserted into the icon node
  */
 
 const ICON_TYPE = {
@@ -954,7 +956,7 @@ function clear_icon(node, self){
 
     self._iconStyleKeys = [];
 
-    // reset the image (remove the inline value so a css class can provide it)
+    // reset the image (remove the inline value so a CSS class can provide it)
     setStyle(node, "background-image", "");
     delete node["_s_background-image"];
 
@@ -972,6 +974,20 @@ function clear_icon(node, self){
 
     setStyle(node, "display", "none");
 }
+
+WinBox.prototype.setIconUrl = function(src){
+
+    const img = getByClass(this.dom, "wb-icon");
+    if(!img){
+
+        return this;
+    }
+    
+    setStyle(img, "background-image", "url(" + src + ")");
+    setStyle(img, "display", "inline-block");
+
+    return this;
+}; 
 
 /**
  * Sets the titlebar icon of the window.
@@ -991,6 +1007,17 @@ function clear_icon(node, self){
  */
 
 WinBox.prototype.setIcon = function(src){
+    
+    if(typeof src === "string"){
+
+        this.setIconUrl(src);
+        return this;
+    }
+
+    if(!src || typeof src !== "object"){
+
+        return this;
+    }
 
     const node = getByClass(this.dom, "wb-icon");
 
@@ -1000,24 +1027,13 @@ WinBox.prototype.setIcon = function(src){
     }
 
     clear_icon(node, this);
-
-    if(typeof src === "string"){
-
-        src = { "IconType": "Url", "Source": src };
-    }
-    else if(!src || typeof src !== "object"){
-
-        return this;
-    }
-    else{
-
-        src = {
-            "IconType": pick(src, ["IconType", "iconType", "type"]),
-            "Source": pick(src, ["Source", "source"]),
-            "Id": pick(src, ["Id", "id"]),
-            "IconStyle": pick(src, ["IconStyle", "iconStyle", "style"])
-        };
-    }
+    
+    src = { 
+        "IconType": pick(src, ["IconType", "iconType", "type"]),
+        "Source": pick(src, ["Source", "source"]),
+        "Id": pick(src, ["Id", "id"]),
+        "IconStyle": pick(src, ["IconStyle", "iconStyle", "style"])
+    }; 
 
     const type = String(src["IconType"] || "Url").toLowerCase();
     const source = src["Source"];
